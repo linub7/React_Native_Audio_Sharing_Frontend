@@ -1,55 +1,57 @@
+import {FC} from 'react';
+import {Button, SafeAreaView, StyleSheet, View} from 'react-native';
+
 import colors from '@utils/colors';
-import {FC, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
 import AuthInputFields from '@components/auth/auth-input-fields';
+import {signupValidationSchema} from '@utils/validationSchema';
+import FormComponent from '@components/shared/form';
+import SubmitButton from '@components/shared/buttons/submit';
 
 interface Props {}
 
-interface IUserInfo {
-  name: string;
-  email: string;
-  password: string;
-}
+const initialValues = {
+  name: '',
+  email: '',
+  password: '',
+};
 
 const SignUpScreen: FC<Props> = props => {
-  const [userInfo, setUserInfo] = useState<IUserInfo>({
-    name: '',
-    password: '',
-    email: '',
-  });
-  const {name, password, email} = userInfo;
-
-  console.log({name, password, email});
+  const handleSubmit = (values: Object) => {
+    console.log(values);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.formContainer}>
-        <AuthInputFields
-          placeholder="John Doe"
-          label="Name"
-          value={name}
-          onChange={text => setUserInfo({...userInfo, name: text})}
-          containerStyle={styles.marginBottom}
-        />
+      <FormComponent
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={signupValidationSchema}>
+        <View style={styles.formContainer}>
+          <AuthInputFields
+            placeholder="John Doe"
+            label="Name"
+            name="name"
+            containerStyle={styles.marginBottom}
+          />
 
-        <AuthInputFields
-          placeholder="john@gmail.com"
-          label="Email"
-          keyboardType="email-address"
-          value={email}
-          onChange={text => setUserInfo({...userInfo, email: text})}
-          autoCapitalize="none"
-          containerStyle={styles.marginBottom}
-        />
+          <AuthInputFields
+            placeholder="john@gmail.com"
+            label="Email"
+            keyboardType="email-address"
+            name="email"
+            autoCapitalize="none"
+            containerStyle={styles.marginBottom}
+          />
 
-        <AuthInputFields
-          placeholder="********"
-          label="Password"
-          secureTextEntry={true}
-          value={password}
-          onChange={text => setUserInfo({...userInfo, password: text})}
-        />
-      </View>
+          <AuthInputFields
+            placeholder="********"
+            label="Password"
+            secureTextEntry={true}
+            name="password"
+          />
+          <SubmitButton btnTitle="Sign up" />
+        </View>
+      </FormComponent>
     </SafeAreaView>
   );
 };

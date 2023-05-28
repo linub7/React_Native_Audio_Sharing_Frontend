@@ -13,7 +13,6 @@ const AuthInputLabel: FC<Props> = ({label}) => {
 const styles = StyleSheet.create({
   label: {
     color: colors.CONTRAST,
-    padding: 5,
   },
 });
 
