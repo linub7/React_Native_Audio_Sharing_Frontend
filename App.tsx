@@ -1,11 +1,10 @@
-import { Text, View } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 import React from 'react';
+import SignUpScreen from '@views/auth/signup';
 
 const App = () => {
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+    <SignUpScreen />
   );
 };
 
