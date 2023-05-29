@@ -48,6 +48,7 @@ const SignUpScreen: FC<Props> = props => {
             label="Password"
             secureTextEntry={true}
             name="password"
+            containerStyle={styles.marginBottom}
           />
           <SubmitButton btnTitle="Sign up" />
         </View>

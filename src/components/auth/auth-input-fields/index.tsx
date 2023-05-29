@@ -2,7 +2,7 @@ import AuthInput from '@ui/auth/input';
 import AuthInputErrorLabel from '@ui/auth/input-error-label';
 import AuthInputLabel from '@ui/auth/input-label';
 import {useFormikContext} from 'formik';
-import {FC} from 'react';
+import {FC, useEffect} from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -10,6 +10,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface Props {
   name: string; // required for formik
@@ -22,6 +29,8 @@ interface Props {
 }
 
 const AuthInputFields: FC<Props> = props => {
+  const inputTransformValue = useSharedValue(0);
+
   const {handleChange, values, errors, handleBlur, touched} = useFormikContext<{
     [key: string]: string;
   }>();
@@ -38,8 +47,30 @@ const AuthInputFields: FC<Props> = props => {
 
   const errorMessage = touched[name] && errors[name] ? errors[name] : '';
 
+  const shakeUI = () => {
+    inputTransformValue.value = withSequence(
+      withTiming(-10, {duration: 50}),
+      withSpring(0, {
+        damping: 8,
+        mass: 0.5,
+        stiffness: 1000,
+        restDisplacementThreshold: 0.1,
+      }),
+    );
+  };
+
+  const inputStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateX: inputTransformValue.value}],
+    };
+  });
+
+  useEffect(() => {
+    if (errorMessage) shakeUI();
+  }, [errorMessage]);
+
   return (
-    <View style={[styles.container, containerStyle]}>
+    <Animated.View style={[containerStyle, inputStyle]}>
       <View style={styles.labelContainer}>
         <AuthInputLabel label={label} />
         <AuthInputErrorLabel errorLabel={errorMessage} />
@@ -53,12 +84,11 @@ const AuthInputFields: FC<Props> = props => {
         autoCapitalize={autoCapitalize}
         onBlur={handleBlur(name)}
       />
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
   labelContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
