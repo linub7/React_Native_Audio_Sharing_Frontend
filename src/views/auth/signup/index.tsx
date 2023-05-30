@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
 import colors from '@utils/colors';
 import AuthInputFields from '@components/auth/auth-input-fields';
@@ -7,6 +7,10 @@ import {signupValidationSchema} from '@utils/validationSchema';
 import FormComponent from '@components/shared/form';
 import SubmitButton from '@components/shared/buttons/submit';
 import PasswordVisibilityIcon from '@ui/icons/password-visibility';
+import AppLink from '@ui/links/app';
+import CircleUI from '@ui/circle';
+import CirclesComponent from '@components/shared/circles';
+import AuthFormContainer from '@components/auth/form-container';
 
 interface Props {}
 
@@ -26,11 +30,13 @@ const SignUpScreen: FC<Props> = props => {
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FormComponent
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={signupValidationSchema}>
+    <FormComponent
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      validationSchema={signupValidationSchema}>
+      <AuthFormContainer
+        heading="Welcome!"
+        subheading="Let's get started by creating your account.">
         <View style={styles.formContainer}>
           <AuthInputFields
             placeholder="John Doe"
@@ -58,25 +64,29 @@ const SignUpScreen: FC<Props> = props => {
             onRightIconPress={handleTogglePrivateIcon}
           />
           <SubmitButton btnTitle="Sign up" />
+          <View style={styles.linkContainer}>
+            <AppLink title="I Lost My Password" />
+            <AppLink title="Signin" />
+          </View>
         </View>
-      </FormComponent>
-    </SafeAreaView>
+      </AuthFormContainer>
+    </FormComponent>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.PRIMARY,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   formContainer: {
     width: '100%',
-    paddingHorizontal: 15,
   },
   marginBottom: {
     marginBottom: 20,
+  },
+  linkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingHorizontal: 5,
   },
 });
 
