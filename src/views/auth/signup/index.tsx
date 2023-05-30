@@ -1,11 +1,12 @@
-import {FC} from 'react';
-import {Button, SafeAreaView, StyleSheet, View} from 'react-native';
+import {FC, useState} from 'react';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 
 import colors from '@utils/colors';
 import AuthInputFields from '@components/auth/auth-input-fields';
 import {signupValidationSchema} from '@utils/validationSchema';
 import FormComponent from '@components/shared/form';
 import SubmitButton from '@components/shared/buttons/submit';
+import PasswordVisibilityIcon from '@ui/icons/password-visibility';
 
 interface Props {}
 
@@ -16,9 +17,13 @@ const initialValues = {
 };
 
 const SignUpScreen: FC<Props> = props => {
+  const [privateIcon, setPrivateIcon] = useState(true);
+
   const handleSubmit = (values: Object) => {
     console.log(values);
   };
+
+  const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,9 +51,11 @@ const SignUpScreen: FC<Props> = props => {
           <AuthInputFields
             placeholder="********"
             label="Password"
-            secureTextEntry={true}
+            secureTextEntry={privateIcon}
             name="password"
             containerStyle={styles.marginBottom}
+            rightIcon={<PasswordVisibilityIcon privateIcon={privateIcon} />}
+            onRightIconPress={handleTogglePrivateIcon}
           />
           <SubmitButton btnTitle="Sign up" />
         </View>
