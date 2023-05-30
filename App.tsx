@@ -1,11 +1,10 @@
-import { SafeAreaView, Text, View } from 'react-native';
 import React from 'react';
-import SignUpScreen from '@views/auth/signup';
+import SigninScreen from '@views/auth/signin';
+import LostPasswordScreen from '@views/auth/lost-password';
+import VerifyEmailScreen from '@views/auth/verify-email';
 
 const App = () => {
-  return (
-    <SignUpScreen />
-  );
+  return <VerifyEmailScreen />;
 };
 
 export default App;

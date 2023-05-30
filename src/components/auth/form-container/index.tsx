@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingVertical: 5,
   },
-  subheading: {color: colors.CONTRAST, fontSize: 16},
+  subheading: {color: colors.CONTRAST, fontSize: 16, lineHeight: 23},
 });
 
 export default AuthFormContainer;

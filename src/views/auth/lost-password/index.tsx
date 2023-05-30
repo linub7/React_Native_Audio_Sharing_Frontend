@@ -1,11 +1,10 @@
-import {FC, useState} from 'react';
+import {FC} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
-import {signinValidationSchema} from '@utils/validationSchema';
+import {lostPasswordValidationSchema} from '@utils/validationSchema';
 import FormComponent from '@components/shared/form';
 import SubmitButton from '@components/shared/buttons/submit';
-import PasswordVisibilityIcon from '@ui/icons/password-visibility';
 import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
 
@@ -13,24 +12,21 @@ interface Props {}
 
 const initialValues = {
   email: '',
-  password: '',
 };
 
-const SigninScreen: FC<Props> = props => {
-  const [privateIcon, setPrivateIcon] = useState(true);
-
+const LostPasswordScreen: FC<Props> = props => {
   const handleSubmit = (values: Object) => {
     console.log(values);
   };
-
-  const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
 
   return (
     <FormComponent
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={signinValidationSchema}>
-      <AuthFormContainer heading="Welcome Back!">
+      validationSchema={lostPasswordValidationSchema}>
+      <AuthFormContainer
+        heading="Forget Password!"
+        subheading="OOPS, did you forget your password? Do not worry, we will help you get back in.">
         <View style={styles.formContainer}>
           <AuthInputFields
             placeholder="john@gmail.com"
@@ -41,18 +37,9 @@ const SigninScreen: FC<Props> = props => {
             containerStyle={styles.marginBottom}
           />
 
-          <AuthInputFields
-            placeholder="********"
-            label="Password"
-            secureTextEntry={privateIcon}
-            name="password"
-            containerStyle={styles.marginBottom}
-            rightIcon={<PasswordVisibilityIcon privateIcon={privateIcon} />}
-            onRightIconPress={handleTogglePrivateIcon}
-          />
-          <SubmitButton btnTitle="Sign in" />
+          <SubmitButton btnTitle="Send Link" />
           <View style={styles.linkContainer}>
-            <AppLink title="I Lost My Password" />
+            <AppLink title="Sign in" />
             <AppLink title="Sign up" />
           </View>
         </View>
@@ -77,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SigninScreen;
+export default LostPasswordScreen;

@@ -18,3 +18,21 @@ export const signupValidationSchema = Yup.object({
     )
     .required('Password is required!'),
 });
+
+export const signinValidationSchema = Yup.object({
+  email: Yup.string()
+    .trim('Email is required!')
+    .email('Invalid Email')
+    .required('Email is required!'),
+  password: Yup.string()
+    .trim('Password is required!')
+    .min(8, 'Password is too shot!')
+    .required('Password is required!'),
+});
+
+export const lostPasswordValidationSchema = Yup.object({
+  email: Yup.string()
+    .trim('Email is required!')
+    .email('Invalid Email')
+    .required('Email is required!'),
+});

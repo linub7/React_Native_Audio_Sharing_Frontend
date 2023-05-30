@@ -1,15 +1,12 @@
 import {FC, useState} from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import colors from '@utils/colors';
 import AuthInputFields from '@components/auth/auth-input-fields';
 import {signupValidationSchema} from '@utils/validationSchema';
 import FormComponent from '@components/shared/form';
 import SubmitButton from '@components/shared/buttons/submit';
 import PasswordVisibilityIcon from '@ui/icons/password-visibility';
 import AppLink from '@ui/links/app';
-import CircleUI from '@ui/circle';
-import CirclesComponent from '@components/shared/circles';
 import AuthFormContainer from '@components/auth/form-container';
 
 interface Props {}
@@ -66,7 +63,7 @@ const SignUpScreen: FC<Props> = props => {
           <SubmitButton btnTitle="Sign up" />
           <View style={styles.linkContainer}>
             <AppLink title="I Lost My Password" />
-            <AppLink title="Signin" />
+            <AppLink title="Sign in" />
           </View>
         </View>
       </AuthFormContainer>
