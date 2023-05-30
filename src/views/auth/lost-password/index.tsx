@@ -1,5 +1,6 @@
 import {FC} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
 import {lostPasswordValidationSchema} from '@utils/validationSchema';
@@ -7,6 +8,7 @@ import FormComponent from '@components/shared/form';
 import SubmitButton from '@components/shared/buttons/submit';
 import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
+import {AuthStackParamList} from 'src/@types/navigation';
 
 interface Props {}
 
@@ -15,6 +17,7 @@ const initialValues = {
 };
 
 const LostPasswordScreen: FC<Props> = props => {
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const handleSubmit = (values: Object) => {
     console.log(values);
   };
@@ -39,8 +42,14 @@ const LostPasswordScreen: FC<Props> = props => {
 
           <SubmitButton btnTitle="Send Link" />
           <View style={styles.linkContainer}>
-            <AppLink title="Sign in" />
-            <AppLink title="Sign up" />
+            <AppLink
+              title="Sign in"
+              onPress={() => navigation.navigate('signin')}
+            />
+            <AppLink
+              title="Sign up"
+              onPress={() => navigation.navigate('signup')}
+            />
           </View>
         </View>
       </AuthFormContainer>

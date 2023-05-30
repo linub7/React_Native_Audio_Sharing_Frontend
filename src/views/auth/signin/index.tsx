@@ -8,6 +8,8 @@ import SubmitButton from '@components/shared/buttons/submit';
 import PasswordVisibilityIcon from '@ui/icons/password-visibility';
 import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {AuthStackParamList} from 'src/@types/navigation';
 
 interface Props {}
 
@@ -18,6 +20,8 @@ const initialValues = {
 
 const SigninScreen: FC<Props> = props => {
   const [privateIcon, setPrivateIcon] = useState(true);
+
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const handleSubmit = (values: Object) => {
     console.log(values);
@@ -52,8 +56,14 @@ const SigninScreen: FC<Props> = props => {
           />
           <SubmitButton btnTitle="Sign in" />
           <View style={styles.linkContainer}>
-            <AppLink title="I Lost My Password" />
-            <AppLink title="Sign up" />
+            <AppLink
+              title="I Lost My Password"
+              onPress={() => navigation.navigate('lost-password')}
+            />
+            <AppLink
+              title="Sign up"
+              onPress={() => navigation.navigate('signup')}
+            />
           </View>
         </View>
       </AuthFormContainer>

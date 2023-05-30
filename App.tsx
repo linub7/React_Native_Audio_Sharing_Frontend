@@ -1,10 +1,13 @@
-import React from 'react';
-import SigninScreen from '@views/auth/signin';
-import LostPasswordScreen from '@views/auth/lost-password';
-import VerifyEmailScreen from '@views/auth/verify-email';
+import {NavigationContainer} from '@react-navigation/native';
+
+import AuthNavigator from 'src/navigation/auth';
 
 const App = () => {
-  return <VerifyEmailScreen />;
+  return (
+    <NavigationContainer>
+      <AuthNavigator />
+    </NavigationContainer>
+  );
 };
 
 export default App;
