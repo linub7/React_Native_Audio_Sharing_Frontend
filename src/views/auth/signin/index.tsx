@@ -10,6 +10,10 @@ import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AuthStackParamList} from 'src/@types/navigation';
+import {ISigninUser} from 'src/@types/auth';
+import {FormikHelpers} from 'formik';
+import {signinHandler} from 'src/api/auth';
+import client from 'src/api/client';
 
 interface Props {}
 
@@ -23,8 +27,19 @@ const SigninScreen: FC<Props> = props => {
 
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
-  const handleSubmit = (values: Object) => {
-    console.log(values);
+  const handleSubmit = async (
+    values: ISigninUser,
+    actions: FormikHelpers<ISigninUser>,
+  ) => {
+    actions.setSubmitting(true);
+    const {err, data} = await signinHandler(values);
+    if (err) {
+      console.log(err);
+      actions.setSubmitting(false);
+      return;
+    }
+    actions.setSubmitting(false);
+    console.log(data);
   };
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);

@@ -9,6 +9,9 @@ import SubmitButton from '@components/shared/buttons/submit';
 import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
 import {AuthStackParamList} from 'src/@types/navigation';
+import {IForgotPassword} from 'src/@types/auth';
+import {FormikHelpers} from 'formik';
+import {forgotPasswordHandler} from 'src/api/auth';
 
 interface Props {}
 
@@ -18,8 +21,20 @@ const initialValues = {
 
 const LostPasswordScreen: FC<Props> = props => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
-  const handleSubmit = (values: Object) => {
-    console.log(values);
+
+  const handleSubmit = async (
+    values: IForgotPassword,
+    actions: FormikHelpers<IForgotPassword>,
+  ) => {
+    actions.setSubmitting(true);
+    const {err, data} = await forgotPasswordHandler(values);
+    if (err) {
+      console.log(err);
+      actions.setSubmitting(false);
+      return;
+    }
+    actions.setSubmitting(false);
+    console.log(data);
   };
 
   return (

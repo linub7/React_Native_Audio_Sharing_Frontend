@@ -1,3 +1,4 @@
+import CustomLoader from '@ui/loader';
 import colors from '@utils/colors';
 import {FC} from 'react';
 import {StyleSheet, Pressable, Text} from 'react-native';
@@ -5,12 +6,17 @@ import {StyleSheet, Pressable, Text} from 'react-native';
 interface Props {
   btnTitle: string;
   onPress?(): void;
+  loading?: boolean;
 }
 
-const AppButton: FC<Props> = ({btnTitle, onPress}) => {
+const AppButton: FC<Props> = ({btnTitle, onPress, loading = false}) => {
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <Text style={styles.title}>{btnTitle}</Text>
+      {loading ? (
+        <CustomLoader />
+      ) : (
+        <Text style={styles.title}>{btnTitle}</Text>
+      )}
     </Pressable>
   );
 };

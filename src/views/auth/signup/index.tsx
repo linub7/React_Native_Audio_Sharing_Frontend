@@ -1,5 +1,6 @@
 import {FC, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {FormikHelpers} from 'formik';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
 import {signupValidationSchema} from '@utils/validationSchema';
@@ -10,6 +11,8 @@ import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AuthStackParamList} from 'src/@types/navigation';
+import {ISignupUser} from 'src/@types/auth';
+import {signupHandler} from 'src/api/auth';
 
 interface Props {}
 
@@ -21,14 +24,24 @@ const initialValues = {
 
 const SignUpScreen: FC<Props> = props => {
   const [privateIcon, setPrivateIcon] = useState(true);
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
-  const handleSubmit = (values: Object) => {
-    console.log(values);
+  const handleSubmit = async (
+    values: ISignupUser,
+    actions: FormikHelpers<ISignupUser>,
+  ) => {
+    actions.setSubmitting(true);
+    const {err, data} = await signupHandler(values);
+    if (err) {
+      console.log(err);
+      actions.setSubmitting(false);
+      return;
+    }
+    actions.setSubmitting(false);
+    navigation.navigate('verify-email', {userInfo: data?.user});
   };
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
-
-  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   return (
     <FormComponent
