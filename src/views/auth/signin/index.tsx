@@ -1,5 +1,8 @@
 import {FC, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {FormikHelpers} from 'formik';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
 import {signinValidationSchema} from '@utils/validationSchema';
@@ -8,12 +11,11 @@ import SubmitButton from '@components/shared/buttons/submit';
 import PasswordVisibilityIcon from '@ui/icons/password-visibility';
 import AppLink from '@ui/links/app';
 import AuthFormContainer from '@components/auth/form-container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AuthStackParamList} from 'src/@types/navigation';
 import {ISigninUser} from 'src/@types/auth';
-import {FormikHelpers} from 'formik';
 import {signinHandler} from 'src/api/auth';
-import client from 'src/api/client';
+import {updateLoggedInStateAction, updateProfileAction} from 'src/store/auth';
+import {Keys, saveToAsyncStorage} from '@utils/asyncStorage';
 
 interface Props {}
 
@@ -26,6 +28,7 @@ const SigninScreen: FC<Props> = props => {
   const [privateIcon, setPrivateIcon] = useState(true);
 
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (
     values: ISigninUser,
@@ -38,8 +41,12 @@ const SigninScreen: FC<Props> = props => {
       actions.setSubmitting(false);
       return;
     }
+
+    await saveToAsyncStorage(Keys.AUTH_TOKEN, data?.token);
+    dispatch(updateProfileAction({profile: data?.user}));
+    dispatch(updateLoggedInStateAction({loggedInState: true}));
+
     actions.setSubmitting(false);
-    console.log(data);
   };
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);

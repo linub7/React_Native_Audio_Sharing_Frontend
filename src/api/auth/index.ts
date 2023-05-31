@@ -89,3 +89,17 @@ export const reVerifyEmailHandler = async (userId: string) => {
     return {err: response?.data?.message};
   }
 };
+
+export const getMeHandler = async (token: string) => {
+  try {
+    const {data} = await client.get(`/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {data};
+  } catch (error: any) {
+    const response = error?.response;
+    return {err: response?.data?.message};
+  }
+};

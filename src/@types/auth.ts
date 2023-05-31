@@ -31,3 +31,19 @@ export interface IVerifyEmail {
 export interface IReVerifyEmail {
   userId: string;
 }
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  verified: boolean;
+  avatar?: string;
+  followers: number;
+  followings: number;
+}
+
+export interface AuthState {
+  profile: UserProfile | null;
+  loggedIn: boolean;
+  loading: boolean;
+}
