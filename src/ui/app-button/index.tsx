@@ -7,11 +7,19 @@ interface Props {
   btnTitle: string;
   onPress?(): void;
   loading?: boolean;
+  borderRadius?: number;
 }
 
-const AppButton: FC<Props> = ({btnTitle, onPress, loading = false}) => {
+const AppButton: FC<Props> = ({
+  btnTitle,
+  onPress,
+  loading = false,
+  borderRadius,
+}) => {
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable
+      style={[styles.container, {borderRadius: borderRadius || 25}]}
+      onPress={onPress}>
       {loading ? (
         <CustomLoader />
       ) : (
@@ -28,7 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.SECONDARY,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 25,
   },
   title: {
     color: colors.CONTRAST,
