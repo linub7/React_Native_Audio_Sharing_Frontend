@@ -8,12 +8,14 @@ import {
   Pressable,
 } from 'react-native';
 import {DocumentPickerResponse, types} from 'react-native-document-picker';
+import * as Yup from 'yup';
 
 import CategorySelectorComponent from '@components/shared/category-selector';
 import FileSelectorComponent from '@components/shared/file-selector';
 import AppButton from '@ui/app-button';
 import colors from '@utils/colors';
 import {categories} from '@utils/categories';
+import {audioInfoValidationSchema} from '@utils/validationSchema';
 
 interface FormFields {
   title: string;
@@ -35,7 +37,16 @@ const UploadScreen: FC<Props> = props => {
   const [modalVisible, setModalVisible] = useState(false);
   const [audioInfo, setAudioInfo] = useState({...defaultForm});
 
-  const handleUploadAudio = () => console.log(audioInfo);
+  const handleUploadAudio = async () => {
+    try {
+      const data = await audioInfoValidationSchema.validate(audioInfo);
+      console.log(data);
+    } catch (error) {
+      if (error instanceof Yup.ValidationError)
+        console.log('validation error: ', error.message);
+      else console.log(error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>

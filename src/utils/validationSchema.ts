@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import {categories} from './categories';
 
 export const signupValidationSchema = Yup.object({
   name: Yup.string()
@@ -35,4 +36,24 @@ export const lostPasswordValidationSchema = Yup.object({
     .trim('Email is required!')
     .email('Invalid Email')
     .required('Email is required!'),
+});
+
+export const audioInfoValidationSchema = Yup.object({
+  title: Yup.string().required('Title is required'),
+  about: Yup.string().required('About is required'),
+  category: Yup.string()
+    .oneOf(categories, 'Invalid Category')
+    .required('Category is required'),
+  file: Yup.object({
+    uri: Yup.string().required('Audio file uri is required!'),
+    name: Yup.string().required('Audio file name is required!'),
+    type: Yup.string().required('Audio file is type required!'),
+    size: Yup.number().required('Audio file is size required!'),
+  }),
+  poster: Yup.object({
+    uri: Yup.string(),
+    name: Yup.string(),
+    type: Yup.string(),
+    size: Yup.number(),
+  }),
 });
