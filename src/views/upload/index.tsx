@@ -7,6 +7,7 @@ import {
   View,
   Pressable,
 } from 'react-native';
+import {DocumentPickerResponse, types} from 'react-native-document-picker';
 
 import CategorySelectorComponent from '@components/shared/category-selector';
 import FileSelectorComponent from '@components/shared/file-selector';
@@ -14,13 +15,27 @@ import AppButton from '@ui/app-button';
 import colors from '@utils/colors';
 import {categories} from '@utils/categories';
 
+interface FormFields {
+  title: string;
+  category: string;
+  about: string;
+  file?: DocumentPickerResponse;
+  poster?: DocumentPickerResponse;
+}
+
 interface Props {}
+
+const defaultForm: FormFields = {
+  title: '',
+  about: '',
+  category: '',
+};
 
 const UploadScreen: FC<Props> = props => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [audioInfo, setAudioInfo] = useState({
-    category: '',
-  });
+  const [audioInfo, setAudioInfo] = useState({...defaultForm});
+
+  const handleUploadAudio = () => console.log(audioInfo);
 
   return (
     <ScrollView style={styles.container}>
@@ -28,11 +43,15 @@ const UploadScreen: FC<Props> = props => {
         <FileSelectorComponent
           btnTitle="Select Poster"
           iconName="image-outline"
+          options={{type: [types.images]}}
+          onSelect={poster => setAudioInfo({...audioInfo, poster})}
         />
         <FileSelectorComponent
           btnTitle="Select Audio"
           iconName="file-music-outline"
           style={{marginLeft: 20}}
+          options={{type: [types.audio]}}
+          onSelect={file => setAudioInfo({...audioInfo, file})}
         />
       </View>
       <View style={styles.formContainer}>
@@ -40,6 +59,7 @@ const UploadScreen: FC<Props> = props => {
           style={styles.input}
           placeholderTextColor={colors.INACTIVE_CONTRAST}
           placeholder="Title"
+          onChangeText={text => setAudioInfo({...audioInfo, title: text})}
         />
         <Pressable
           onPress={() => setModalVisible(true)}
@@ -53,6 +73,7 @@ const UploadScreen: FC<Props> = props => {
           placeholder="About"
           numberOfLines={10}
           multiline
+          onChangeText={text => setAudioInfo({...audioInfo, about: text})}
         />
         <CategorySelectorComponent
           visible={modalVisible}
@@ -67,7 +88,7 @@ const UploadScreen: FC<Props> = props => {
           borderRadius={7}
           btnTitle="Submit"
           loading={false}
-          onPress={() => {}}
+          onPress={handleUploadAudio}
         />
       </View>
     </ScrollView>

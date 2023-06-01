@@ -1,4 +1,3 @@
-import colors from '@utils/colors';
 import {FC} from 'react';
 import {
   StyleProp,
@@ -8,27 +7,60 @@ import {
   View,
   Pressable,
 } from 'react-native';
+import DocumentPicker, {
+  DocumentPickerOptions,
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import {SupportedPlatforms} from 'react-native-document-picker/lib/typescript/fileTypes';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import colors from '@utils/colors';
 
 interface Props {
   iconName: string;
   btnTitle: string;
-  onPress?(): void;
+  onSelect(file: DocumentPickerResponse): void;
   color?: string;
   size?: number;
   style?: StyleProp<ViewStyle>;
+  options?: DocumentPickerOptions<SupportedPlatforms>;
 }
 
 const FileSelectorComponent: FC<Props> = ({
   iconName,
   btnTitle,
-  onPress,
+  onSelect,
   color = colors.SECONDARY,
   size = 35,
   style,
+  options,
 }) => {
+  const handleDocumentSelect = async () => {
+    try {
+      const document = await DocumentPicker.pick(options);
+      const file = document[0];
+      /**
+       * document is :[
+       *  {
+       *    "fileCopyUri": null,
+       *    "name": "",
+       *    "size": ,
+       *    "type": "",
+       *    "uri": ""
+       *  }
+       * ]
+       */
+      onSelect && onSelect(file);
+    } catch (error) {
+      if (!DocumentPicker.isCancel(error)) {
+        console.log(error);
+      }
+    }
+  };
   return (
-    <Pressable style={[styles.btnContainer, style]} onPress={onPress}>
+    <Pressable
+      style={[styles.btnContainer, style]}
+      onPress={handleDocumentSelect}>
       <View style={styles.iconContainer}>
         <MaterialComIcon name={iconName} size={size} color={color} />
       </View>
