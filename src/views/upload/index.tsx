@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {DocumentPickerResponse, types} from 'react-native-document-picker';
 import * as Yup from 'yup';
+import Toast from 'react-native-toast-message';
 
 import CategorySelectorComponent from '@components/shared/category-selector';
 import FileSelectorComponent from '@components/shared/file-selector';
@@ -20,6 +21,7 @@ import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import Progress from '@ui/progress';
 import client from 'src/api/client';
 import {mapRange} from '@utils/math';
+import catchAsyncError from 'src/api/catcheError';
 
 interface FormFields {
   title: string;
@@ -94,10 +96,13 @@ const UploadScreen: FC<Props> = props => {
       });
 
       console.log('data from response upload: ', data);
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof Yup.ValidationError)
-        console.log('validation error: ', error.message);
-      else console.log(error);
+        Toast.show({type: 'error', text1: error.errors[0]});
+      else {
+        const errorMessage = catchAsyncError(error);
+        Toast.show({type: 'error', text1: errorMessage});
+      }
     }
     setLoading(false);
   };

@@ -45,10 +45,10 @@ export const audioInfoValidationSchema = Yup.object({
     .oneOf(categories, 'Invalid Category')
     .required('Category is required'),
   file: Yup.object({
-    uri: Yup.string().required('Audio file uri is required!'),
-    name: Yup.string().required('Audio file name is required!'),
-    type: Yup.string().required('Audio file is type required!'),
-    size: Yup.number().required('Audio file is size required!'),
+    uri: Yup.string().required('Audio file is required!'),
+    name: Yup.string().required('Audio file is required!'),
+    type: Yup.string().required('Audio file is required!'),
+    size: Yup.number().required('Audio file is required!'),
   }),
   poster: Yup.object({
     uri: Yup.string(),

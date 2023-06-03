@@ -1,6 +1,6 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {FC, useEffect} from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   getAuthState,
@@ -8,6 +8,8 @@ import {
   updateLoggedInStateAction,
   updateProfileAction,
 } from 'src/store/auth';
+import Toast from 'react-native-toast-message';
+
 import AuthenticatedTabNavigator from './authenticated';
 import AuthNavigator from './auth';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
@@ -27,9 +29,7 @@ const AppTheme = {
 };
 
 const AppNavigator: FC<Props> = props => {
-  const {
-    auth: {loggedIn, loading},
-  } = useSelector(getAuthState);
+  const {loggedIn, loading} = useSelector(getAuthState);
 
   const dispatch = useDispatch();
 
@@ -48,8 +48,6 @@ const AppNavigator: FC<Props> = props => {
         console.log(err);
         return;
       }
-
-      console.log('auth profile: ', data?.user);
       dispatch(updateProfileAction({profile: data?.user}));
       dispatch(updateLoggedInStateAction({loggedInState: true}));
       dispatch(updateLoadingStateAction({loadingState: false}));
@@ -67,6 +65,7 @@ const AppNavigator: FC<Props> = props => {
         </View>
       ) : null}
       {loggedIn ? <AuthenticatedTabNavigator /> : <AuthNavigator />}
+      <Toast position="top" />
     </NavigationContainer>
   );
 };

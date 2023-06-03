@@ -2,6 +2,7 @@ import {FC, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {FormikHelpers} from 'formik';
+import Toast from 'react-native-toast-message';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
@@ -37,15 +38,14 @@ const SigninScreen: FC<Props> = props => {
     actions.setSubmitting(true);
     const {err, data} = await signinHandler(values);
     if (err) {
-      console.log(err);
       actions.setSubmitting(false);
-      return;
+      return Toast.show({type: 'error', text1: err});
     }
 
     await saveToAsyncStorage(Keys.AUTH_TOKEN, data?.token);
     dispatch(updateProfileAction({profile: data?.user}));
     dispatch(updateLoggedInStateAction({loggedInState: true}));
-
+    Toast.show({type: 'success', text1: 'Welcome back'});
     actions.setSubmitting(false);
   };
 

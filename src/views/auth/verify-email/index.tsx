@@ -1,12 +1,14 @@
-import AuthFormContainer from '@components/auth/form-container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {FC, useEffect, useRef, useState} from 'react';
+import {Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
+import Toast from 'react-native-toast-message';
+
+import AuthFormContainer from '@components/auth/form-container';
 import AppButton from '@ui/app-button';
 import OTPField from '@ui/auth/otp-field';
 import AppLink from '@ui/links/app';
 import colors from '@utils/colors';
-import {FC, useEffect, useRef, useState} from 'react';
-import {Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 import {AuthStackParamList} from 'src/@types/navigation';
 import {reVerifyEmailHandler, verifyEmailHandler} from 'src/api/auth';
 
@@ -78,7 +80,8 @@ const VerifyEmail: FC<Props> = ({
   const isValidOtp = otp.every(value => value.trim());
 
   const handleSubmit = async () => {
-    if (!isValidOtp) return;
+    if (!isValidOtp)
+      return Toast.show({type: 'error', text1: 'Please enter valid OTP!'});
     setLoading(true);
     const token: string = otp.join('');
     const values = {
@@ -88,10 +91,13 @@ const VerifyEmail: FC<Props> = ({
 
     const {err, data} = await verifyEmailHandler(values);
     if (err) {
-      console.log(err);
       setLoading(false);
-      return;
+      return Toast.show({type: 'error', text1: err});
     }
+    Toast.show({
+      type: 'success',
+      text1: data?.message,
+    });
     setLoading(false);
     navigation.navigate('signin');
   };
@@ -103,10 +109,9 @@ const VerifyEmail: FC<Props> = ({
     const {err, data} = await reVerifyEmailHandler(userInfo?.id);
 
     if (err) {
-      console.log(err);
-      return;
+      return Toast.show({type: 'error', text1: err});
     }
-    console.log(data);
+    Toast.show({type: 'success', text1: data?.message});
   };
 
   return (

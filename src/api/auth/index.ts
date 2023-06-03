@@ -7,6 +7,7 @@ import {
   IVerifyEmail,
 } from 'src/@types/auth';
 import client from '../client';
+import catchAsyncError from '../catcheError';
 
 export const signupHandler = async (values: ISignupUser) => {
   try {
@@ -14,9 +15,9 @@ export const signupHandler = async (values: ISignupUser) => {
       ...values,
     });
     return {data};
-  } catch (error: any) {
-    const response = error?.response;
-    return {err: response?.data?.message};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };
 
@@ -27,9 +28,8 @@ export const signinHandler = async (values: ISigninUser) => {
     });
     return {data};
   } catch (error) {
-    console.log('error: ', error);
-    // const response = error?.response;
-    return {err: error};
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };
 
@@ -49,8 +49,8 @@ export const signoutHandler = async (
     );
     return {data};
   } catch (error: any) {
-    const response = error?.response;
-    return {err: response?.data?.message};
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };
 
@@ -61,8 +61,8 @@ export const forgotPasswordHandler = async (values: IForgotPassword) => {
     });
     return {data};
   } catch (error: any) {
-    const response = error?.response;
-    return {err: response?.data?.message};
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };
 
@@ -73,8 +73,8 @@ export const verifyEmailHandler = async (values: IVerifyEmail) => {
     });
     return {data};
   } catch (error: any) {
-    const response = error?.response;
-    return {err: response?.data?.message};
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };
 
@@ -85,8 +85,8 @@ export const reVerifyEmailHandler = async (userId: string) => {
     });
     return {data};
   } catch (error: any) {
-    const response = error?.response;
-    return {err: response?.data?.message};
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };
 
@@ -99,7 +99,7 @@ export const getMeHandler = async (token: string) => {
     });
     return {data};
   } catch (error: any) {
-    const response = error?.response;
-    return {err: response?.data?.message};
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
   }
 };

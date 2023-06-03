@@ -1,5 +1,6 @@
 import {FC, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 import {FormikHelpers} from 'formik';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
@@ -33,11 +34,15 @@ const SignUpScreen: FC<Props> = props => {
     actions.setSubmitting(true);
     const {err, data} = await signupHandler(values);
     if (err) {
-      console.log(err);
       actions.setSubmitting(false);
-      return;
+      return Toast.show({type: 'error', text1: err});
     }
     actions.setSubmitting(false);
+    Toast.show({
+      type: 'success',
+      text1: 'You registered successfully.',
+      text2: 'Please verified your account',
+    });
     navigation.navigate('verify-email', {userInfo: data?.user});
   };
 

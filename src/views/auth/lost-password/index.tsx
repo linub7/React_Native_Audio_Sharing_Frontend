@@ -1,6 +1,7 @@
 import {FC} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import AuthInputFields from '@components/auth/auth-input-fields';
 import {lostPasswordValidationSchema} from '@utils/validationSchema';
@@ -29,11 +30,11 @@ const LostPasswordScreen: FC<Props> = props => {
     actions.setSubmitting(true);
     const {err, data} = await forgotPasswordHandler(values);
     if (err) {
-      console.log(err);
       actions.setSubmitting(false);
-      return;
+      return Toast.show({type: 'error', text1: err});
     }
     actions.setSubmitting(false);
+    Toast.show({type: 'success', text1: 'Please check your mail.'});
     console.log(data);
   };
 
