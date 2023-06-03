@@ -16,6 +16,10 @@ import AppButton from '@ui/app-button';
 import colors from '@utils/colors';
 import {categories} from '@utils/categories';
 import {audioInfoValidationSchema} from '@utils/validationSchema';
+import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
+import Progress from '@ui/progress';
+import client from 'src/api/client';
+import {mapRange} from '@utils/math';
 
 interface FormFields {
   title: string;
@@ -31,21 +35,71 @@ const defaultForm: FormFields = {
   title: '',
   about: '',
   category: '',
+  file: undefined,
+  poster: undefined,
 };
 
 const UploadScreen: FC<Props> = props => {
   const [modalVisible, setModalVisible] = useState(false);
   const [audioInfo, setAudioInfo] = useState({...defaultForm});
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleUploadAudio = async () => {
+    setLoading(true);
     try {
-      const data = await audioInfoValidationSchema.validate(audioInfo);
-      console.log(data);
+      const validationRes = await audioInfoValidationSchema.validate(audioInfo);
+
+      const formData = new FormData();
+      formData.append('title', validationRes.title);
+      formData.append('about', validationRes.about);
+      formData.append('category', validationRes.category);
+      formData.append('file', {
+        name: validationRes.file.name,
+        type: validationRes.file.type,
+        uri: validationRes.file.uri,
+      });
+      if (validationRes.poster.uri) {
+        formData.append('poster', {
+          name: validationRes.poster.name,
+          type: validationRes.poster.type,
+          uri: validationRes.poster.uri,
+        });
+      }
+
+      const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+      if (!token) return;
+
+      const {data} = await client.post(`/audios`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data;',
+        },
+        onUploadProgress(progressEvent) {
+          const uploaded = mapRange({
+            inputMin: 0,
+            inputMax: progressEvent.total || 0,
+            outputMin: 0,
+            outputMax: 100,
+            inputValue: progressEvent.loaded,
+          });
+
+          if (uploaded >= 100) {
+            setAudioInfo({...defaultForm});
+            setLoading(false);
+          }
+
+          setUploadProgress(Math.floor(uploaded));
+        },
+      });
+
+      console.log('data from response upload: ', data);
     } catch (error) {
       if (error instanceof Yup.ValidationError)
         console.log('validation error: ', error.message);
       else console.log(error);
     }
+    setLoading(false);
   };
 
   return (
@@ -71,6 +125,7 @@ const UploadScreen: FC<Props> = props => {
           placeholderTextColor={colors.INACTIVE_CONTRAST}
           placeholder="Title"
           onChangeText={text => setAudioInfo({...audioInfo, title: text})}
+          value={audioInfo.title}
         />
         <Pressable
           onPress={() => setModalVisible(true)}
@@ -85,6 +140,7 @@ const UploadScreen: FC<Props> = props => {
           numberOfLines={10}
           multiline
           onChangeText={text => setAudioInfo({...audioInfo, about: text})}
+          value={audioInfo.about}
         />
         <CategorySelectorComponent
           visible={modalVisible}
@@ -94,11 +150,13 @@ const UploadScreen: FC<Props> = props => {
           onSelect={item => setAudioInfo({...audioInfo, category: item})}
           onRequestClose={() => setModalVisible(false)}
         />
-        <View style={{marginBottom: 20}} />
+        <View style={{marginVertical: 20}}>
+          {loading && <Progress progress={uploadProgress} />}
+        </View>
         <AppButton
           borderRadius={7}
           btnTitle="Submit"
-          loading={false}
+          loading={loading}
           onPress={handleUploadAudio}
         />
       </View>
