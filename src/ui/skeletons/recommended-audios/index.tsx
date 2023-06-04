@@ -3,7 +3,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface Props {}
 
-const Skeleton: FC<Props> = props => {
+const RecommendedAudiosSkeleton: FC<Props> = props => {
   return (
     <SkeletonPlaceholder borderRadius={4}>
       <>
@@ -18,14 +18,11 @@ const Skeleton: FC<Props> = props => {
           alignItems="center"
           gap={10}
           marginLeft={5}>
-          <SkeletonPlaceholder.Item width={100} height={100} />
-          <SkeletonPlaceholder.Item width={100} height={100} />
-          <SkeletonPlaceholder.Item width={100} height={100} />
-          <SkeletonPlaceholder.Item width={100} height={100} />
+          <SkeletonPlaceholder.Item width={'100%'} height={350} />
         </SkeletonPlaceholder.Item>
       </>
     </SkeletonPlaceholder>
   );
 };
 
-export default Skeleton;
+export default RecommendedAudiosSkeleton;

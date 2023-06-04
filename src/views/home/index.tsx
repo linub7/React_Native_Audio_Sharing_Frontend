@@ -1,21 +1,17 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useFetchLatestAudios} from 'src/hooks/query';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
-import AudioList from '@components/audio/list';
-import Skeleton from '@ui/skeleton';
+import LatestUploads from '@components/home/latest-uploads';
+import RecommendedAudios from '@components/home/recommended-audios';
 
 interface Props {}
 
 const HomeScreen: FC<Props> = props => {
-  const {data, isLoading} = useFetchLatestAudios();
-
-  if (isLoading) return <Skeleton />;
-
   return (
-    <View style={styles.container}>
-      <AudioList label="Latest Uploads" data={data ? data : []} />
-    </View>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <LatestUploads />
+      <RecommendedAudios />
+    </ScrollView>
   );
 };
 
