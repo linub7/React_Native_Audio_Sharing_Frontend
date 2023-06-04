@@ -21,7 +21,7 @@ import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import Progress from '@ui/progress';
 import client from 'src/api/client';
 import {mapRange} from '@utils/math';
-import catchAsyncError from 'src/api/catcheError';
+import catchAsyncError from 'src/api/catchError';
 
 interface FormFields {
   title: string;

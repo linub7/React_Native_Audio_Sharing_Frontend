@@ -7,7 +7,7 @@ import {
   IVerifyEmail,
 } from 'src/@types/auth';
 import client from '../client';
-import catchAsyncError from '../catcheError';
+import catchAsyncError from '../catchError';
 
 export const signupHandler = async (values: ISignupUser) => {
   try {

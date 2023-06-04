@@ -11,27 +11,30 @@ import {
 import {signoutHandler} from 'src/api/auth';
 import {updateProfileAction} from 'src/store/auth';
 import {updateLoggedInStateAction} from 'src/store/auth';
+import {getLatestUploadsHandler} from 'src/api/audio';
+import catchAsyncError from 'src/api/catchError';
+import {useState} from 'react';
+import {useQuery} from 'react-query';
+import {useFetchLatestAudios} from 'src/hooks/query';
 
 interface Props {}
 
 const HomeScreen: FC<Props> = props => {
-  const dispatch = useDispatch();
+  const {data, isLoading} = useFetchLatestAudios();
 
-  const handleSignout = async () => {
-    const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
-    if (!token)
-      return Toast.show({type: 'error', text1: 'OOPS, something went wrong!'});
-    await signoutHandler(undefined, token);
-    await clearAsyncStorage();
-    dispatch(updateProfileAction({profile: null}));
-    dispatch(updateLoggedInStateAction({loggedInState: false}));
-
-    Toast.show({type: 'success', text1: 'Signed Out'});
-  };
+  if (isLoading)
+    return (
+      <View style={styles.container}>
+        <Text style={{color: 'white', fontSize: 15}}>Loading</Text>
+      </View>
+    );
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
-      <Button title="Signout" onPress={handleSignout} />
+      {data?.map((item, index) => (
+        <Text key={index} style={{color: 'white', paddingVertical: 10}}>
+          {item?.title}
+        </Text>
+      ))}
     </View>
   );
 };
