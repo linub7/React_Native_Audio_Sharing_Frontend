@@ -65,3 +65,13 @@ export const newPlaylistValidationSchema = Yup.object().shape({
     .oneOf(['public', 'private'], 'visibility must be public or private')
     .required('Visibility is required'),
 });
+
+export const oldPlaylistValidationSchema = Yup.object().shape({
+  title: Yup.string().required('Title is required'),
+  // this is gonna validate audio id
+  item: Yup.string(),
+  visibility: Yup.string().oneOf(
+    ['public', 'private'],
+    'visibility must be public or private',
+  ),
+});

@@ -13,10 +13,17 @@ import {addToFavoriteHandler} from 'src/api/favorite';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import PlaylistModal from '@components/home/modals/playlist';
 import PlaylistForm, {PlaylistFormInfo} from '@components/home/playlist-form';
-import {newPlaylistValidationSchema} from '@utils/validationSchema';
+import {
+  newPlaylistValidationSchema,
+  oldPlaylistValidationSchema,
+} from '@utils/validationSchema';
 import catchAsyncError from 'src/api/catchError';
-import {createNewPlaylistHandler} from 'src/api/playlist';
+import {
+  createNewPlaylistHandler,
+  updatePlaylistHandler,
+} from 'src/api/playlist';
 import {useFetchMyPlaylists} from 'src/hooks/query';
+import {Playlist} from 'src/@types/playlist';
 
 interface Props {}
 
@@ -84,6 +91,38 @@ const HomeScreen: FC<Props> = props => {
     setCreateNewPlaylistLoading(false);
   };
 
+  const handleUpdatePlaylistAudios = async (item: Playlist) => {
+    try {
+      const payload = {
+        title: item.title,
+        item: selectedAudio?.id,
+      };
+      const validationRes = await oldPlaylistValidationSchema.validate(payload);
+      const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+      if (!token) return;
+      const {err, data} = await updatePlaylistHandler(
+        item.id,
+        validationRes,
+        token,
+      );
+      if (err) {
+        return Toast.show({type: 'error', text1: err});
+      }
+      Toast.show({
+        type: 'success',
+        text1: `Audio Added to ${item.title} Playlist`,
+      });
+    } catch (error: any) {
+      if (error instanceof Yup.ValidationError)
+        Toast.show({type: 'error', text1: error.errors[0]});
+      else {
+        const errorMessage = catchAsyncError(error);
+        Toast.show({type: 'error', text1: errorMessage});
+      }
+    }
+    setShowPlaylistModal(false);
+  };
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <LatestUploads
@@ -128,6 +167,7 @@ const HomeScreen: FC<Props> = props => {
           setShowPlaylistModal(false);
           setShowCreatePlaylistModal(true);
         }}
+        handleUpdatePlaylistAudios={handleUpdatePlaylistAudios}
       />
 
       <PlaylistForm

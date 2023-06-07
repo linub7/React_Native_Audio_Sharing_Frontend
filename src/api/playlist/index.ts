@@ -1,4 +1,4 @@
-import {ICreateNewPlaylist} from 'src/@types/playlist';
+import {ICreateNewPlaylist, IUpdatePlaylist} from 'src/@types/playlist';
 import catchAsyncError from '../catchError';
 import client from '../client';
 
@@ -30,6 +30,28 @@ export const createNewPlaylistHandler = async (
   try {
     const {data} = await client.post(
       `/playlists`,
+      {...values},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
+
+export const updatePlaylistHandler = async (
+  playlistId: string,
+  values: IUpdatePlaylist,
+  token: string | undefined,
+) => {
+  try {
+    const {data} = await client.patch(
+      `/playlists/${playlistId}`,
       {...values},
       {
         headers: {

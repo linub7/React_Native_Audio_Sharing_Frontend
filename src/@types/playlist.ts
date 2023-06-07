@@ -10,3 +10,9 @@ export interface Playlist {
   itemsCount: number;
   visibility: 'public' | 'private';
 }
+
+export interface IUpdatePlaylist {
+  title: string;
+  item?: string;
+  visibility?: string;
+}
