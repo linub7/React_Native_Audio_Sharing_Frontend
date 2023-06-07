@@ -5,7 +5,7 @@ import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import ListItem from './list-item';
-import {Playlist} from 'src/@types/audio';
+import {Playlist} from 'src/@types/playlist';
 
 interface Props {
   visible: boolean;

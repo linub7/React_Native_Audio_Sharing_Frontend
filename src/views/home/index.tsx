@@ -16,6 +16,7 @@ import PlaylistForm, {PlaylistFormInfo} from '@components/home/playlist-form';
 import {newPlaylistValidationSchema} from '@utils/validationSchema';
 import catchAsyncError from 'src/api/catchError';
 import {createNewPlaylistHandler} from 'src/api/playlist';
+import {useFetchMyPlaylists} from 'src/hooks/query';
 
 interface Props {}
 
@@ -27,12 +28,14 @@ const HomeScreen: FC<Props> = props => {
   const [createNewPlaylistLoading, setCreateNewPlaylistLoading] =
     useState(false);
 
+  const {data} = useFetchMyPlaylists();
+
   const handleOnLongPress = (item: AudioDataResponse) => {
     setSelectedAudio(item);
     setVisible(true);
   };
 
-  const handleAddToPlaylist = () => {
+  const handleAddToPlaylist = async () => {
     setVisible(false);
     setShowPlaylistModal(true);
   };
@@ -120,7 +123,7 @@ const HomeScreen: FC<Props> = props => {
       <PlaylistModal
         visible={showPlaylistModal}
         onRequestClose={() => setShowPlaylistModal(false)}
-        playlist={[]}
+        playlist={data || []}
         onPress={() => {
           setShowPlaylistModal(false);
           setShowCreatePlaylistModal(true);
