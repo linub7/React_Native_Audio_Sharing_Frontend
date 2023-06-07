@@ -57,3 +57,11 @@ export const audioInfoValidationSchema = Yup.object({
     size: Yup.number(),
   }),
 });
+
+export const newPlaylistValidationSchema = Yup.object().shape({
+  title: Yup.string().required('Title is required'),
+  resId: Yup.string(),
+  visibility: Yup.string()
+    .oneOf(['public', 'private'], 'visibility must be public or private')
+    .required('Visibility is required'),
+});

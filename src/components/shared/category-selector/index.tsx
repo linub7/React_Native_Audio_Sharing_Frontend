@@ -1,13 +1,7 @@
 import {useState} from 'react';
-import {
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, Pressable} from 'react-native';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import colors from '@utils/colors';
 import BasicModalContainer from '@ui/basic-modal';
 
