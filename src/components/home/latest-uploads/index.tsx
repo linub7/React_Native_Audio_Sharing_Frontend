@@ -1,4 +1,4 @@
-import AudioItem from '@ui/audio-item';
+import AudioItem from '@ui/audio-item/home';
 import LatestUploadsSkeleton from '@ui/skeletons/latest-uploads';
 import colors from '@utils/colors';
 import {FC} from 'react';

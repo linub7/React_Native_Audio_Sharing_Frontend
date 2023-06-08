@@ -1,20 +1,25 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {useSelector} from 'react-redux';
 
 import UploadsTab from '@components/profile/tabs/uploads';
 import HistoryTab from '@components/profile/tabs/history';
 import PlaylistTab from '@components/profile/tabs/playlist';
 import FavoritesTab from '@components/profile/tabs/favorites';
 import colors from '@utils/colors';
+import ProfileContainer from '@components/profile/container';
+import {getAuthState} from 'src/store/auth';
 
 const Tab = createMaterialTopTabNavigator();
 
 interface Props {}
 
 const ProfileScreen: FC<Props> = props => {
+  const {profile} = useSelector(getAuthState);
   return (
     <View style={styles.container}>
+      <ProfileContainer profile={profile} />
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: styles.tabBarStyle,
@@ -32,8 +37,10 @@ const ProfileScreen: FC<Props> = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10,
   },
   tabBarStyle: {
+    marginBottom: 20,
     backgroundColor: 'transparent',
     elevation: 0,
     shadowRadius: 0,

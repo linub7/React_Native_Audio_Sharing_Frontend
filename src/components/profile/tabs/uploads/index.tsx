@@ -1,13 +1,32 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
+
+import ProfileAudioItem from '@ui/audio-item/profile';
+import {useFetchUploadsByProfile} from 'src/hooks/query';
+import ProfileTopBarsSkeleton from '@ui/skeletons/profile-top-bars';
+import EmptyRecords from '@ui/empty-records';
 
 interface Props {}
 
 const UploadsTab: FC<Props> = props => {
+  const {data, isLoading} = useFetchUploadsByProfile();
+
+  if (isLoading) return <ProfileTopBarsSkeleton />;
+
+  if (!data?.length) return <EmptyRecords title="There is no Audio!" />;
+
   return (
-    <View style={styles.container}>
-      <Text style={{fontSize: 20, color: 'white'}}>Uploads</Text>
-    </View>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {data?.map((item, index) => (
+        <ProfileAudioItem
+          name={item.owner.name}
+          title={item.title}
+          key={index}
+          uri={item?.poster}
+          onPress={() => console.log('on press')}
+        />
+      ))}
+    </ScrollView>
   );
 };
 

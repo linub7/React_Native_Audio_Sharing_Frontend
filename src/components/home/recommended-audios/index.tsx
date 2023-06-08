@@ -6,6 +6,7 @@ import colors from '@utils/colors';
 import {useFetchRecommendedAudios} from 'src/hooks/query';
 import RecommendedAudiosSkeleton from '@ui/skeletons/recommended-audios';
 import {AudioDataResponse} from 'src/@types/audio';
+import {getSource} from '@utils/helper';
 
 interface Props {
   onPress(item: AudioDataResponse, data: AudioDataResponse[]): void;
@@ -14,9 +15,6 @@ interface Props {
 
 const RecommendedAudios: FC<Props> = ({onPress, onLongPress}) => {
   const {data = [], isLoading} = useFetchRecommendedAudios();
-
-  const getPoster = (poster?: string) =>
-    poster ? {uri: poster} : require('../../../assets/music.png');
 
   if (isLoading) return <RecommendedAudiosSkeleton />;
   return (
@@ -29,7 +27,7 @@ const RecommendedAudios: FC<Props> = ({onPress, onLongPress}) => {
           <Pressable
             onPress={() => onPress(item, data)}
             onLongPress={() => onLongPress(item, data)}>
-            <Image source={getPoster(item?.poster)} style={styles.image} />
+            <Image source={getSource(item?.poster)} style={styles.image} />
             <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
               {item.title}
             </Text>

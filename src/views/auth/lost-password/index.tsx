@@ -35,7 +35,6 @@ const LostPasswordScreen: FC<Props> = props => {
     }
     actions.setSubmitting(false);
     Toast.show({type: 'success', text1: 'Please check your mail.'});
-    console.log(data);
   };
 
   return (

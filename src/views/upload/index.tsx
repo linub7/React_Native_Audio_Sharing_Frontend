@@ -94,8 +94,6 @@ const UploadScreen: FC<Props> = props => {
           setUploadProgress(Math.floor(uploaded));
         },
       });
-
-      console.log('data from response upload: ', data);
     } catch (error: any) {
       if (error instanceof Yup.ValidationError)
         Toast.show({type: 'error', text1: error.errors[0]});

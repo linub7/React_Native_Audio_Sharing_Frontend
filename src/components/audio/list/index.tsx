@@ -1,4 +1,4 @@
-import AudioItem from '@ui/audio-item';
+import AudioItem from '@ui/audio-item/home';
 import colors from '@utils/colors';
 import {FC} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';

@@ -1,4 +1,5 @@
 import colors from '@utils/colors';
+import {getSource} from '@utils/helper';
 import {FC} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 
@@ -10,13 +11,12 @@ interface Props {
 }
 
 const AudioItem: FC<Props> = ({onPress, onLongPress, uri, title}) => {
-  const source = uri ? {uri} : require('../../assets/music.png');
   return (
     <Pressable
       onPress={onPress}
       onLongPress={onLongPress}
       style={{width: 100, marginRight: 15}}>
-      <Image source={source} style={styles.image} />
+      <Image source={getSource(uri)} style={styles.image} />
       <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
         {title}
       </Text>
