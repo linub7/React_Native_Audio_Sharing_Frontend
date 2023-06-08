@@ -6,14 +6,18 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import AvatarField from '@ui/avatar-field';
 import colors from '@utils/colors';
 import {UserProfile} from 'src/@types/auth';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {ProfileNavigatorStackParamList} from 'src/@types/navigation';
 
 interface Props {
   profile?: UserProfile | null;
 }
 
 const ProfileContainer: FC<Props> = ({profile}) => {
-  if (!profile) return null;
+  const {navigate} =
+    useNavigation<NavigationProp<ProfileNavigatorStackParamList>>();
 
+  if (!profile) return null;
   return (
     <View style={styles.container}>
       <AvatarField source={profile?.avatar} />
@@ -35,7 +39,9 @@ const ProfileContainer: FC<Props> = ({profile}) => {
         </View>
       </View>
 
-      <Pressable style={styles.settingsBtn}>
+      <Pressable
+        onPress={() => navigate('profile-settings')}
+        style={styles.settingsBtn}>
         <AntDesign name="setting" size={22} color={colors.CONTRAST} />
       </Pressable>
     </View>

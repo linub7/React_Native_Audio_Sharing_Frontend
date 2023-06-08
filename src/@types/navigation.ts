@@ -8,3 +8,8 @@ export type AuthStackParamList = {
     userInfo: ISignupUserResponse;
   };
 };
+
+export type ProfileNavigatorStackParamList = {
+  profile: undefined;
+  'profile-settings': undefined;
+};

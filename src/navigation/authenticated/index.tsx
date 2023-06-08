@@ -4,8 +4,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import colors from '@utils/colors';
 import HomeScreen from '@views/home';
-import ProfileScreen from '@views/profile';
 import UploadScreen from '@views/upload';
+import ProfileNavigator from '../profile-navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,8 +29,8 @@ const AuthenticatedTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="profile"
-        component={ProfileScreen}
+        name="profile-navigator"
+        component={ProfileNavigator}
         options={{
           tabBarIcon: props => (
             <AntDesign name="user" size={props.size} color={props.color} />
