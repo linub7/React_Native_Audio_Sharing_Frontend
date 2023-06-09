@@ -30,6 +30,10 @@ const authSlice = createSlice({
       } = action;
       state.loading = loadingState;
     },
+    loggedOutAction: state => {
+      state.profile = null;
+      state.loggedIn = false;
+    },
   },
 });
 
@@ -38,6 +42,7 @@ export const {
     updateProfileAction,
     updateLoggedInStateAction,
     updateLoadingStateAction,
+    loggedOutAction,
   },
 } = authSlice;
 

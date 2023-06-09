@@ -2,14 +2,14 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {FC, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-toast-message';
+
 import {
   getAuthState,
   updateLoadingStateAction,
   updateLoggedInStateAction,
   updateProfileAction,
 } from 'src/store/auth';
-import Toast from 'react-native-toast-message';
-
 import AuthenticatedTabNavigator from './authenticated';
 import AuthNavigator from './auth';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';

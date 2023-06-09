@@ -1,51 +1,62 @@
 import {FC} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {StyleSheet, Text, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 import AppHeader from '@components/profile/app-header';
-import AvatarField from '@ui/avatar-field';
 import colors from '@utils/colors';
-import AppButton from '@ui/app-button';
+import {signoutHandler} from 'src/api/auth';
+import {
+  Keys,
+  clearAsyncStorage,
+  getFromAsyncStorage,
+} from '@utils/asyncStorage';
+import {useDispatch} from 'react-redux';
+import {loggedOutAction} from 'src/store/auth';
+import ProfileSettingsLogout from '@components/profile-settings/logout';
+import ProfileSettingsInfo from '@components/profile-settings/info';
 
 interface Props {}
 
 const ProfileSettingsScreen: FC<Props> = props => {
+  const dispatch = useDispatch();
+
+  const handleLogout = async (fromAll?: boolean) => {
+    const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+    if (!token) return;
+
+    if (fromAll) {
+      const {err, data} = await signoutHandler('yes', token);
+      if (err) {
+        return Toast.show({
+          type: 'success',
+          text1: err,
+        });
+      }
+    } else {
+      const {err, data} = await signoutHandler(undefined, token);
+      if (err) {
+        return Toast.show({
+          type: 'success',
+          text1: err,
+        });
+      }
+    }
+    await clearAsyncStorage();
+    dispatch(loggedOutAction());
+    Toast.show({
+      type: 'success',
+      text1: 'Take care, and I hope to see you soon!',
+    });
+  };
+
   return (
     <View style={styles.container}>
       <AppHeader title="Profile > Settings" />
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Profile Settings</Text>
       </View>
-      <View style={styles.settingOptionsContainer}>
-        <View style={styles.avatarContainer}>
-          <AvatarField />
-          <Pressable style={styles.paddingLeft}>
-            <Text style={styles.linkText}>Update Profile Image</Text>
-          </Pressable>
-        </View>
-        <TextInput style={styles.nameInput} />
-        <View style={styles.emailContainer}>
-          <Text style={styles.email}>fake@abc.com</Text>
-          <MaterialIcons name="verified" size={15} color={colors.SECONDARY} />
-        </View>
-      </View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Log out</Text>
-      </View>
-      <View style={styles.settingOptionsContainer}>
-        <Pressable style={styles.logoutBtn}>
-          <AntDesign name="logout" size={20} color={colors.CONTRAST} />
-          <Text style={styles.logoutBtnTitle}>Log out from all</Text>
-        </Pressable>
-        <Pressable style={styles.logoutBtn}>
-          <AntDesign name="logout" size={20} color={colors.CONTRAST} />
-          <Text style={styles.logoutBtnTitle}>Log out</Text>
-        </Pressable>
-      </View>
-      <View style={styles.marginTop}>
-        <AppButton btnTitle="Update Profile" borderRadius={7} />
-      </View>
+      <ProfileSettingsInfo />
+      <ProfileSettingsLogout handleLogout={handleLogout} />
     </View>
   );
 };
@@ -64,53 +75,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     color: colors.SECONDARY,
-  },
-  settingOptionsContainer: {
-    marginTop: 15,
-    paddingLeft: 15,
-  },
-  avatarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  linkText: {
-    color: colors.SECONDARY,
-    fontStyle: 'italic',
-  },
-  paddingLeft: {
-    paddingLeft: 15,
-  },
-  nameInput: {
-    color: colors.CONTRAST,
-    fontWeight: 'bold',
-    fontSize: 18,
-    padding: 10,
-    borderWidth: 0.5,
-    borderColor: colors.CONTRAST,
-    borderRadius: 7,
-    marginTop: 15,
-  },
-  emailContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  email: {
-    color: colors.CONTRAST,
-    marginRight: 10,
-  },
-  logoutBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  logoutBtnTitle: {
-    color: colors.CONTRAST,
-    fontSize: 18,
-    marginLeft: 5,
-  },
-  marginTop: {
-    marginTop: 15,
   },
 });
 
