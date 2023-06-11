@@ -1,4 +1,3 @@
-import {string} from 'yup';
 import catchAsyncError from '../catchError';
 import client from '../client';
 
@@ -17,6 +16,7 @@ export const getRecommendedAudiosByProfileHandler = async (
     return {err: errorMessage};
   }
 };
+
 export const getUploadsByProfileHandler = async (
   page: string,
   limit: string,
@@ -31,6 +31,24 @@ export const getUploadsByProfileHandler = async (
         },
       },
     );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
+
+export const updateProfileHandler = async (
+  formData: FormData,
+  token: string,
+) => {
+  try {
+    const {data} = await client.post(`/auth/update-profile`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data;',
+      },
+    });
     return {data};
   } catch (error) {
     const errorMessage = catchAsyncError(error);

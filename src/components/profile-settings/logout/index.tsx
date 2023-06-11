@@ -25,9 +25,6 @@ const ProfileSettingsLogout: FC<Props> = ({handleLogout}) => {
           <Text style={styles.logoutBtnTitle}>Log out</Text>
         </Pressable>
       </View>
-      <View style={styles.marginTop}>
-        <AppButton btnTitle="Update Profile" borderRadius={7} />
-      </View>
     </>
   );
 };
@@ -58,9 +55,6 @@ const styles = StyleSheet.create({
     color: colors.CONTRAST,
     fontSize: 18,
     marginLeft: 5,
-  },
-  marginTop: {
-    marginTop: 15,
   },
 });
 

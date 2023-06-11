@@ -5,21 +5,39 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AvatarField from '@ui/avatar-field';
 import colors from '@utils/colors';
 
-interface Props {}
+interface Props {
+  name: string;
+  email?: string;
+  verified?: boolean;
+  avatar?: string;
+  onChangeText(text: string): void;
+}
 
-const ProfileSettingsInfo: FC<Props> = props => {
+const ProfileSettingsInfo: FC<Props> = ({
+  name,
+  email,
+  verified,
+  avatar,
+  onChangeText,
+}) => {
   return (
     <View style={styles.settingOptionsContainer}>
       <View style={styles.avatarContainer}>
-        <AvatarField />
+        <AvatarField source={avatar} />
         <Pressable style={styles.paddingLeft}>
           <Text style={styles.linkText}>Update Profile Image</Text>
         </Pressable>
       </View>
-      <TextInput style={styles.nameInput} />
+      <TextInput
+        style={styles.nameInput}
+        value={name}
+        onChangeText={text => onChangeText(text)}
+      />
       <View style={styles.emailContainer}>
-        <Text style={styles.email}>fake@abc.com</Text>
-        <MaterialIcons name="verified" size={15} color={colors.SECONDARY} />
+        <Text style={styles.email}>{email}</Text>
+        {verified && (
+          <MaterialIcons name="verified" size={15} color={colors.SECONDARY} />
+        )}
       </View>
     </View>
   );
