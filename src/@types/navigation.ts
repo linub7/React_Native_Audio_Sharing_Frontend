@@ -12,4 +12,12 @@ export type AuthStackParamList = {
 export type ProfileNavigatorStackParamList = {
   profile: undefined;
   'profile-settings': undefined;
+  'verify-email': {
+    userInfo: ISignupUserResponse;
+  };
+};
+
+export type PossibleNavigators = {
+  'profile-settings': undefined;
+  signin: undefined;
 };

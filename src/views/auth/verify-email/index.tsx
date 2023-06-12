@@ -9,10 +9,17 @@ import AppButton from '@ui/app-button';
 import OTPField from '@ui/auth/otp-field';
 import AppLink from '@ui/links/app';
 import colors from '@utils/colors';
-import {AuthStackParamList} from 'src/@types/navigation';
+import {
+  AuthStackParamList,
+  PossibleNavigators,
+  ProfileNavigatorStackParamList,
+} from 'src/@types/navigation';
 import {reVerifyEmailHandler, verifyEmailHandler} from 'src/api/auth';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'verify-email'>; // must be type! NOT interface!
+type Props = NativeStackScreenProps<
+  AuthStackParamList | ProfileNavigatorStackParamList,
+  'verify-email'
+>; // must be type! NOT interface!
 
 const otpFields = new Array(6).fill('');
 
@@ -29,7 +36,8 @@ const VerifyEmail: FC<Props> = ({
 
   const inputRef = useRef<TextInput>(null);
 
-  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const {navigate, getState} =
+    useNavigation<NavigationProp<PossibleNavigators>>();
 
   const handleChange = (value: string, index: number) => {
     const newOtp = [...otp];
@@ -99,7 +107,18 @@ const VerifyEmail: FC<Props> = ({
       text1: data?.message,
     });
     setLoading(false);
-    navigation.navigate('signin');
+
+    const {routeNames} = getState();
+
+    if (routeNames.includes('signin')) {
+      // navigate back to signin
+      navigate('signin');
+    }
+
+    if (routeNames.includes('profile-settings')) {
+      // navigate back to profile-settings
+      navigate('profile-settings');
+    }
   };
 
   const handleSendReverifyEmail = async () => {

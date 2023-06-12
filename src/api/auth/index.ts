@@ -1,8 +1,6 @@
 import {
   IForgotPassword,
-  IReVerifyEmail,
   ISigninUser,
-  ISignoutUser,
   ISignupUser,
   IVerifyEmail,
 } from 'src/@types/auth';

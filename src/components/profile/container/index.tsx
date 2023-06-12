@@ -2,6 +2,7 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {FC} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 import AvatarField from '@ui/avatar-field';
 import colors from '@utils/colors';
@@ -26,7 +27,11 @@ const ProfileContainer: FC<Props> = ({profile}) => {
         <Text style={styles.profileName}>{profile.name}</Text>
         <View style={styles.flexRow}>
           <Text style={styles.email}>{profile.email}</Text>
-          <MaterialIcons name="verified" size={15} color={colors.SECONDARY} />
+          {profile.verified ? (
+            <MaterialIcons name="verified" size={15} color={colors.SECONDARY} />
+          ) : (
+            <Octicons name="unverified" size={15} color={colors.SECONDARY} />
+          )}
         </View>
 
         <View style={styles.flexRow}>

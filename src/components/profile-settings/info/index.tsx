@@ -4,6 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import AvatarField from '@ui/avatar-field';
 import colors from '@utils/colors';
+import ReVerificationLink from '@components/shared/reverification-link';
 
 interface Props {
   name: string;
@@ -37,8 +38,10 @@ const ProfileSettingsInfo: FC<Props> = ({
       />
       <View style={styles.emailContainer}>
         <Text style={styles.email}>{email}</Text>
-        {verified && (
+        {verified ? (
           <MaterialIcons name="verified" size={15} color={colors.SECONDARY} />
+        ) : (
+          <ReVerificationLink title="verify" activeAtFirst={true} />
         )}
       </View>
     </View>

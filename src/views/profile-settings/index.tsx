@@ -1,29 +1,28 @@
 import {FC, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import deepEqual from 'deep-equal';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useIsFocused} from '@react-navigation/native';
 
 import AppHeader from '@components/profile/app-header';
 import colors from '@utils/colors';
-import {signoutHandler} from 'src/api/auth';
+import {getMeHandler, signoutHandler} from 'src/api/auth';
 import {
   Keys,
   clearAsyncStorage,
   getFromAsyncStorage,
 } from '@utils/asyncStorage';
-import {
-  getAuthState,
-  loggedOutAction,
-  updateProfileAction,
-} from 'src/store/auth';
+import {loggedOutAction, updateProfileAction} from 'src/store/auth';
 import ProfileSettingsLogout from '@components/profile-settings/logout';
 import ProfileSettingsInfo from '@components/profile-settings/info';
 import AppButton from '@ui/app-button';
 import {updateProfileHandler} from 'src/api/profile';
 import CustomLoader from '@ui/loader';
 import {getPermissionToReadImages} from '@utils/helper';
+import {generalError} from '@utils/constants';
+import {UserProfile} from 'src/@types/auth';
 
 interface Props {}
 
@@ -34,15 +33,35 @@ interface ProfileInfo {
 
 const ProfileSettingsScreen: FC<Props> = props => {
   const [userInfo, setUserInfo] = useState<ProfileInfo>({name: ''});
+  const [profile, setProfile] = useState<UserProfile>();
+
   const [loading, setLoading] = useState(false);
 
-  const {profile} = useSelector(getAuthState);
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const isSame = deepEqual(userInfo, {
     name: profile?.name,
     avatar: profile?.avatar,
   });
+
+  useEffect(() => {
+    if (isFocused) handleGetMyProfile();
+  }, [isFocused]);
+
+  console.log(profile);
+
+  const handleGetMyProfile = async () => {
+    const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+    if (!token) return Toast.show({type: 'error', text1: generalError});
+
+    const {err, data} = await getMeHandler(token);
+    if (err) {
+      return Toast.show({type: 'error', text1: err});
+    }
+    setProfile(data?.user);
+    dispatch(updateProfileAction({profile: data?.user}));
+  };
 
   const handleChangeInput = (text: string) =>
     setUserInfo({...userInfo, name: text});
@@ -106,8 +125,7 @@ const ProfileSettingsScreen: FC<Props> = props => {
     }
 
     const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
-    if (!token)
-      return Toast.show({type: 'error', text1: 'OOPS! something went wrong!'});
+    if (!token) return Toast.show({type: 'error', text1: generalError});
     const {err, data} = await updateProfileHandler(formData, token);
     if (err) {
       setLoading(false);
