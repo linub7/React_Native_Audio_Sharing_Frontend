@@ -1,8 +1,9 @@
-import {FC, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {FC, useEffect, useState} from 'react';
+import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-toast-message';
 import * as Yup from 'yup';
+import TrackPlayer from 'react-native-track-player';
 
 import LatestUploads from '@components/home/latest-uploads';
 import RecommendedAudios from '@components/home/recommended-audios';
@@ -24,6 +25,7 @@ import {
 } from 'src/api/playlist';
 import {useFetchMyPlaylists} from 'src/hooks/query';
 import {Playlist} from 'src/@types/playlist';
+import useAudioController from 'src/hooks/useAudioController';
 
 interface Props {}
 
@@ -36,6 +38,7 @@ const HomeScreen: FC<Props> = props => {
     useState(false);
 
   const {data} = useFetchMyPlaylists();
+  const {onAudioPress} = useAudioController();
 
   const handleOnLongPress = (item: AudioDataResponse) => {
     setSelectedAudio(item);
@@ -123,14 +126,21 @@ const HomeScreen: FC<Props> = props => {
     setShowPlaylistModal(false);
   };
 
+  useEffect(() => {
+    const setupPlayer = async () => {
+      await TrackPlayer.setupPlayer();
+    };
+    setupPlayer();
+  }, []);
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <LatestUploads
-        onAudioPress={item => console.log(item)}
+        onAudioPress={onAudioPress}
         onAudioLongPress={handleOnLongPress}
       />
       <RecommendedAudios
-        onPress={item => console.log(item)}
+        onPress={onAudioPress}
         onLongPress={handleOnLongPress}
       />
       <OptionsModal
