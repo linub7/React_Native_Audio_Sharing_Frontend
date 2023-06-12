@@ -11,6 +11,7 @@ interface Props {
   verified?: boolean;
   avatar?: string;
   onChangeText(text: string): void;
+  onPress?(): void;
 }
 
 const ProfileSettingsInfo: FC<Props> = ({
@@ -19,12 +20,13 @@ const ProfileSettingsInfo: FC<Props> = ({
   verified,
   avatar,
   onChangeText,
+  onPress,
 }) => {
   return (
     <View style={styles.settingOptionsContainer}>
       <View style={styles.avatarContainer}>
         <AvatarField source={avatar} />
-        <Pressable style={styles.paddingLeft}>
+        <Pressable onPress={onPress} style={styles.paddingLeft}>
           <Text style={styles.linkText}>Update Profile Image</Text>
         </Pressable>
       </View>

@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
 import deepEqual from 'deep-equal';
+import ImagePicker from 'react-native-image-crop-picker';
 
 import AppHeader from '@components/profile/app-header';
 import colors from '@utils/colors';
@@ -22,6 +23,7 @@ import ProfileSettingsInfo from '@components/profile-settings/info';
 import AppButton from '@ui/app-button';
 import {updateProfileHandler} from 'src/api/profile';
 import CustomLoader from '@ui/loader';
+import {getPermissionToReadImages} from '@utils/helper';
 
 interface Props {}
 
@@ -74,6 +76,20 @@ const ProfileSettingsScreen: FC<Props> = props => {
     });
   };
 
+  const handleImageSelect = async () => {
+    try {
+      await getPermissionToReadImages();
+      const {path} = await ImagePicker.openPicker({
+        cropping: true,
+        width: 300,
+        height: 300,
+      });
+      setUserInfo({...userInfo, avatar: path});
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleUpdateProfile = async () => {
     if (!userInfo.name.trim())
       return Toast.show({type: 'error', text1: 'Profile name is required'});
@@ -81,9 +97,15 @@ const ProfileSettingsScreen: FC<Props> = props => {
     setLoading(true);
     const formData = new FormData();
     formData.append('name', userInfo.name);
+    if (userInfo.avatar) {
+      formData.append('avatar', {
+        name: 'avatar',
+        type: 'image/jpeg',
+        uri: userInfo.avatar,
+      });
+    }
 
     const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
-    console.log('token', token);
     if (!token)
       return Toast.show({type: 'error', text1: 'OOPS! something went wrong!'});
     const {err, data} = await updateProfileHandler(formData, token);
@@ -112,6 +134,7 @@ const ProfileSettingsScreen: FC<Props> = props => {
         verified={profile?.verified}
         avatar={userInfo.avatar}
         onChangeText={handleChangeInput}
+        onPress={handleImageSelect}
       />
       <ProfileSettingsLogout handleLogout={handleLogout} />
       {!isSame && (
