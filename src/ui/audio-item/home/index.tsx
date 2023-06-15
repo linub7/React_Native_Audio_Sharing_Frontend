@@ -1,5 +1,13 @@
 import {FC} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import PlayAnimation from '@ui/play-animation';
 import colors from '@utils/colors';
@@ -11,6 +19,7 @@ interface Props {
   uri?: string;
   title: string;
   playing?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 const AudioItem: FC<Props> = ({
@@ -19,12 +28,13 @@ const AudioItem: FC<Props> = ({
   uri,
   title,
   playing = false,
+  containerStyle,
 }) => {
   return (
     <Pressable
       onPress={onPress}
       onLongPress={onLongPress}
-      style={{width: 100, marginRight: 15}}>
+      style={[styles.container, containerStyle]}>
       <View>
         <Image source={getSource(uri)} style={styles.image} />
         <PlayAnimation visible={playing} />
@@ -37,8 +47,9 @@ const AudioItem: FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {width: 100, marginRight: 15},
   image: {
-    height: 100,
+    width: '100%',
     aspectRatio: 1,
     borderRadius: 7,
   },

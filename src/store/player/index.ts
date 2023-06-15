@@ -5,6 +5,7 @@ import {AudioDataResponse} from 'src/@types/audio';
 
 const initialState: PlayerState = {
   onGoingAudio: null,
+  onGoingList: [],
 };
 
 const playerSlice = createSlice({
@@ -17,11 +18,17 @@ const playerSlice = createSlice({
     ) => {
       state.onGoingAudio = payload;
     },
+    updateOnGoingListAction: (
+      state,
+      {payload}: PayloadAction<AudioDataResponse[]>,
+    ) => {
+      state.onGoingList = payload;
+    },
   },
 });
 
 export const {
-  actions: {updateOnGoingAudioAction},
+  actions: {updateOnGoingAudioAction, updateOnGoingListAction},
 } = playerSlice;
 
 export const getPlayerState = createSelector(

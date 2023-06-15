@@ -1,12 +1,14 @@
 import {FC} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import GridView from '@ui/grid-view';
 import colors from '@utils/colors';
 import {useFetchRecommendedAudios} from 'src/hooks/query';
 import RecommendedAudiosSkeleton from '@ui/skeletons/recommended-audios';
 import {AudioDataResponse} from 'src/@types/audio';
-import {getSource} from '@utils/helper';
+import AudioItem from '@ui/audio-item/home';
+import {getPlayerState} from 'src/store/player';
 
 interface Props {
   onPress(item: AudioDataResponse, data: AudioDataResponse[]): void;
@@ -15,23 +17,24 @@ interface Props {
 
 const RecommendedAudios: FC<Props> = ({onPress, onLongPress}) => {
   const {data = [], isLoading} = useFetchRecommendedAudios();
+  const {onGoingAudio} = useSelector(getPlayerState);
 
   if (isLoading) return <RecommendedAudiosSkeleton />;
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Recommended Audios</Text>
+      <Text style={styles.label}>You May Like this</Text>
       <GridView
         col={3}
         data={data || []}
         renderItem={item => (
-          <Pressable
+          <AudioItem
+            title={item.title}
+            uri={item.poster}
             onPress={() => onPress(item, data)}
-            onLongPress={() => onLongPress(item, data)}>
-            <Image source={getSource(item?.poster)} style={styles.image} />
-            <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
-              {item.title}
-            </Text>
-          </Pressable>
+            onLongPress={() => onLongPress(item, data)}
+            playing={item.id === onGoingAudio?.id}
+            containerStyle={{width: '100%'}}
+          />
         )}
       />
     </View>
