@@ -8,16 +8,11 @@ interface Props {
 }
 
 const AppView: FC<Props> = ({children}) => {
-  const {isPlayerReady, isPlaying, togglePlayPause} = useAudioController();
+  const {isPlayerReady} = useAudioController();
   return (
     <View style={styles.container}>
       <View style={styles.children}>{children}</View>
-      {isPlayerReady && (
-        <MiniAudioPlayer
-          playing={isPlaying}
-          togglePlayPause={togglePlayPause}
-        />
-      )}
+      {isPlayerReady && <MiniAudioPlayer />}
     </View>
   );
 };

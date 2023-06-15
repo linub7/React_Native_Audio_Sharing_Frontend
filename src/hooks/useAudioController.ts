@@ -36,6 +36,8 @@ const useAudioController = () => {
   const isPlayerReady = playbackState !== State.None;
   const isPlaying = playbackState === State.Playing;
   const isPaused = playbackState === State.Paused;
+  const isBusy =
+    playbackState === State.Buffering || playbackState === State.Connecting;
 
   const onAudioPress = async (
     item: AudioDataResponse,
@@ -87,7 +89,7 @@ const useAudioController = () => {
     if (isPaused) await TrackPlayer.play();
   };
 
-  return {onAudioPress, togglePlayPause, isPlayerReady, isPlaying};
+  return {onAudioPress, togglePlayPause, isPlayerReady, isPlaying, isBusy};
 };
 
 export default useAudioController;

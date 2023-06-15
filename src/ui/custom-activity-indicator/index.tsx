@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: 'rgba(200, 200, 200, 0.5)',
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
     borderRadius: 100,
   },
 });

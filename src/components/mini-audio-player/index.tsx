@@ -7,14 +7,14 @@ import {MINI_PLAYER_HEIGHT} from '@utils/constants';
 import {getPlayerState} from 'src/store/player';
 import {getSource} from '@utils/helper';
 import AudioPlayerIcon from '@ui/audio-player-icon';
+import CustomActivityIndicator from '@ui/custom-activity-indicator';
+import useAudioController from 'src/hooks/useAudioController';
 
-interface Props {
-  playing?: boolean;
-  togglePlayPause?(): void;
-}
+interface Props {}
 
-const MiniAudioPlayer: FC<Props> = ({playing, togglePlayPause}) => {
+const MiniAudioPlayer: FC<Props> = ({}) => {
   const {onGoingAudio} = useSelector(getPlayerState);
+  const {isPlaying, togglePlayPause, isBusy} = useAudioController();
   const source = getSource(onGoingAudio?.poster);
   return (
     <View style={styles.container}>
@@ -29,13 +29,17 @@ const MiniAudioPlayer: FC<Props> = ({playing, togglePlayPause}) => {
         color={colors.CONTRAST}
         containerStyle={styles.heartIcon}
       />
-      <AudioPlayerIcon
-        name={playing ? 'pause' : 'caretright'}
-        size={24}
-        color={colors.CONTRAST}
-        onPress={togglePlayPause}
-        containerStyle={styles.button}
-      />
+      {isBusy ? (
+        <CustomActivityIndicator />
+      ) : (
+        <AudioPlayerIcon
+          name={isPlaying ? 'pause' : 'caretright'}
+          size={24}
+          color={colors.CONTRAST}
+          onPress={togglePlayPause}
+          containerStyle={styles.button}
+        />
+      )}
     </View>
   );
 };
