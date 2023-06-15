@@ -26,6 +26,7 @@ import {
 import {useFetchMyPlaylists} from 'src/hooks/query';
 import {Playlist} from 'src/@types/playlist';
 import useAudioController from 'src/hooks/useAudioController';
+import AppView from '@components/app-view';
 
 interface Props {}
 
@@ -134,59 +135,63 @@ const HomeScreen: FC<Props> = props => {
   }, []);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <LatestUploads
-        onAudioPress={onAudioPress}
-        onAudioLongPress={handleOnLongPress}
-      />
-      <RecommendedAudios
-        onPress={onAudioPress}
-        onLongPress={handleOnLongPress}
-      />
-      <OptionsModal
-        visible={visible}
-        onRequestClose={() => setVisible(false)}
-        options={[
-          {
-            title: 'Add to Playlist',
-            icon: 'playlist-music',
-            onPress: handleAddToPlaylist,
-          },
-          {
-            title: 'Toggle to Favorite',
-            icon: 'cards-heart',
-            onPress: handleAddToFavorite,
-          },
-        ]}
-        renderItem={item => (
-          <Pressable onPress={item.onPress} style={styles.optionContainer}>
-            <MaterialComIcon
-              size={24}
-              color={colors.PRIMARY}
-              name={item.icon}
-            />
-            <Text style={styles.optionTitle}>{item.title}</Text>
-          </Pressable>
-        )}
-      />
-      <PlaylistModal
-        visible={showPlaylistModal}
-        onRequestClose={() => setShowPlaylistModal(false)}
-        playlist={data || []}
-        onPress={() => {
-          setShowPlaylistModal(false);
-          setShowCreatePlaylistModal(true);
-        }}
-        handleUpdatePlaylistAudios={handleUpdatePlaylistAudios}
-      />
+    <AppView>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}>
+        <LatestUploads
+          onAudioPress={onAudioPress}
+          onAudioLongPress={handleOnLongPress}
+        />
+        <RecommendedAudios
+          onPress={onAudioPress}
+          onLongPress={handleOnLongPress}
+        />
+        <OptionsModal
+          visible={visible}
+          onRequestClose={() => setVisible(false)}
+          options={[
+            {
+              title: 'Add to Playlist',
+              icon: 'playlist-music',
+              onPress: handleAddToPlaylist,
+            },
+            {
+              title: 'Toggle to Favorite',
+              icon: 'cards-heart',
+              onPress: handleAddToFavorite,
+            },
+          ]}
+          renderItem={item => (
+            <Pressable onPress={item.onPress} style={styles.optionContainer}>
+              <MaterialComIcon
+                size={24}
+                color={colors.PRIMARY}
+                name={item.icon}
+              />
+              <Text style={styles.optionTitle}>{item.title}</Text>
+            </Pressable>
+          )}
+        />
+        <PlaylistModal
+          visible={showPlaylistModal}
+          onRequestClose={() => setShowPlaylistModal(false)}
+          playlist={data || []}
+          onPress={() => {
+            setShowPlaylistModal(false);
+            setShowCreatePlaylistModal(true);
+          }}
+          handleUpdatePlaylistAudios={handleUpdatePlaylistAudios}
+        />
 
-      <PlaylistForm
-        visible={showCreatePlaylistModal}
-        onRequestClose={() => setShowCreatePlaylistModal(false)}
-        onSubmit={handleCreateNewPlaylist}
-        loading={createNewPlaylistLoading}
-      />
-    </ScrollView>
+        <PlaylistForm
+          visible={showCreatePlaylistModal}
+          onRequestClose={() => setShowCreatePlaylistModal(false)}
+          onSubmit={handleCreateNewPlaylist}
+          loading={createNewPlaylistLoading}
+        />
+      </ScrollView>
+    </AppView>
   );
 };
 
