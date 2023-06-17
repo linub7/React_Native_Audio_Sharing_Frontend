@@ -1,24 +1,28 @@
-import {FC} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {FC, useState} from 'react';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
+import {useProgress} from 'react-native-track-player';
 
 import colors from '@utils/colors';
 import {MINI_PLAYER_HEIGHT} from '@utils/constants';
 import {getPlayerState} from 'src/store/player';
 import {getSource} from '@utils/helper';
 import AudioPlayerIcon from '@ui/audio-player-icon';
-import CustomActivityIndicator from '@ui/custom-activity-indicator';
-import useAudioController from 'src/hooks/useAudioController';
 import {mapRange} from '@utils/math';
-import {useProgress} from 'react-native-track-player';
+import AudioPlayer from '@components/home/audio-player';
+import PlayPauseButton from '@components/shared/play-pause-button';
 
 interface Props {}
 
 const MiniAudioPlayer: FC<Props> = ({}) => {
+  const [playerVisibility, setPlayerVisibility] = useState(false);
+
   const {onGoingAudio} = useSelector(getPlayerState);
-  const {isPlaying, togglePlayPause, isBusy} = useAudioController();
   const source = getSource(onGoingAudio?.poster);
   const progress = useProgress();
+
+  const closePlayerModal = () => setPlayerVisibility(false);
+  const showPlayerModal = () => setPlayerVisibility(true);
 
   return (
     <>
@@ -37,28 +41,23 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
       />
       <View style={styles.container}>
         <Image source={source} style={styles.poster} />
-        <View style={styles.contentContainer}>
+        <Pressable onPress={showPlayerModal} style={styles.contentContainer}>
           <Text style={styles.title}>{onGoingAudio?.title}</Text>
           <Text style={styles.name}>{onGoingAudio?.owner.name}</Text>
-        </View>
+        </Pressable>
         <AudioPlayerIcon
           name="hearto"
           size={24}
           color={colors.CONTRAST}
           containerStyle={styles.heartIcon}
         />
-        {isBusy ? (
-          <CustomActivityIndicator />
-        ) : (
-          <AudioPlayerIcon
-            name={isPlaying ? 'pause' : 'caretright'}
-            size={24}
-            color={colors.CONTRAST}
-            onPress={togglePlayPause}
-            containerStyle={styles.button}
-          />
-        )}
+        <PlayPauseButton color={colors.CONTRAST} />
       </View>
+
+      <AudioPlayer
+        onRequestClose={closePlayerModal}
+        visible={playerVisibility}
+      />
     </>
   );
 };

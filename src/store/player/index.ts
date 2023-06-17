@@ -1,4 +1,5 @@
 import {PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
+
 import {RootState} from '..';
 import {PlayerState} from 'src/@types/player';
 import {AudioDataResponse} from 'src/@types/audio';
@@ -6,6 +7,7 @@ import {AudioDataResponse} from 'src/@types/audio';
 const initialState: PlayerState = {
   onGoingAudio: null,
   onGoingList: [],
+  playbackRate: 1,
 };
 
 const playerSlice = createSlice({
@@ -24,11 +26,18 @@ const playerSlice = createSlice({
     ) => {
       state.onGoingList = payload;
     },
+    updatePlaybackRateAction: (state, {payload}: PayloadAction<number>) => {
+      state.playbackRate = payload;
+    },
   },
 });
 
 export const {
-  actions: {updateOnGoingAudioAction, updateOnGoingListAction},
+  actions: {
+    updateOnGoingAudioAction,
+    updateOnGoingListAction,
+    updatePlaybackRateAction,
+  },
 } = playerSlice;
 
 export const getPlayerState = createSelector(

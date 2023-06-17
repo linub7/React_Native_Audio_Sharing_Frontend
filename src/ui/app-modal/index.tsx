@@ -37,6 +37,11 @@ const AppModal: FC<Props> = ({
     transform: [{translateY: translateY.value}],
   }));
 
+  const handleCloseModal = () => {
+    translateY.value = modalHeight;
+    onRequestClose();
+  };
+
   const gesture = Gesture.Pan()
     .runOnJS(true)
     .onUpdate(e => {
@@ -48,7 +53,7 @@ const AppModal: FC<Props> = ({
       if (e.translationY <= modalHeight / 2) translateY.value = 0;
       else {
         translateY.value = modalHeight;
-        runOnJS(onRequestClose)();
+        runOnJS(handleCloseModal)();
       }
     });
 
@@ -58,9 +63,9 @@ const AppModal: FC<Props> = ({
   }, [visible, animation]);
 
   return (
-    <Modal onRequestClose={onRequestClose} visible={visible} transparent>
+    <Modal onRequestClose={handleCloseModal} visible={visible} transparent>
       <GestureHandlerRootView style={{flex: 1}}>
-        <Pressable onResponderEnd={onRequestClose} style={styles.backdrop} />
+        <Pressable onResponderEnd={handleCloseModal} style={styles.backdrop} />
         <GestureDetector gesture={gesture}>
           <Animated.View style={[styles.modal, translateStyle]}>
             {children}

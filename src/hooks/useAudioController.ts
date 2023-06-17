@@ -89,7 +89,58 @@ const useAudioController = () => {
     if (isPaused) await TrackPlayer.play();
   };
 
-  return {onAudioPress, togglePlayPause, isPlayerReady, isPlaying, isBusy};
+  const seekTo = async (position: number) => {
+    await TrackPlayer.seekTo(position);
+  };
+
+  const skipTo = async (sec: number) => {
+    const currentPosition = await TrackPlayer.getPosition();
+    await TrackPlayer.seekTo(currentPosition + sec);
+  };
+
+  const onNextPress = async () => {
+    const currentList = await TrackPlayer.getQueue();
+    const currentIdxOfAudio = await TrackPlayer.getCurrentTrack();
+    if (currentIdxOfAudio === null) return;
+
+    const nextIdx = currentIdxOfAudio + 1;
+
+    const nextAudio = currentList[nextIdx];
+    if (nextAudio) {
+      await TrackPlayer.skipToNext();
+      dispatch(updateOnGoingAudioAction(onGoingList[nextIdx]));
+    }
+  };
+
+  const onPreviousPress = async () => {
+    const currentList = await TrackPlayer.getQueue();
+    const currentIdxOfAudio = await TrackPlayer.getCurrentTrack();
+    if (currentIdxOfAudio === null) return;
+
+    const previousIdx = currentIdxOfAudio - 1;
+    const previousAudio = currentList[previousIdx];
+    if (previousAudio) {
+      await TrackPlayer.skipToPrevious();
+      dispatch(updateOnGoingAudioAction(onGoingList[previousIdx]));
+    }
+  };
+
+  const setPlaybackRate = async (rate: number) => {
+    await TrackPlayer.setRate(rate);
+  };
+
+  return {
+    onAudioPress,
+    togglePlayPause,
+    seekTo,
+    skipTo,
+    onNextPress,
+    onPreviousPress,
+    setPlaybackRate,
+    isPlayerReady,
+    isPlaying,
+    isBusy,
+  };
 };
 
 export default useAudioController;

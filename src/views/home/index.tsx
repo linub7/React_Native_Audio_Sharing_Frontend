@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from 'react';
-import {Button, Pressable, ScrollView, StyleSheet, Text} from 'react-native';
+import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-toast-message';
 import * as Yup from 'yup';
@@ -27,8 +27,6 @@ import {useFetchMyPlaylists} from 'src/hooks/query';
 import {Playlist} from 'src/@types/playlist';
 import useAudioController from 'src/hooks/useAudioController';
 import AppView from '@components/app-view';
-import AppModal from '@ui/app-modal';
-import {View} from 'react-native';
 
 interface Props {}
 
@@ -39,7 +37,6 @@ const HomeScreen: FC<Props> = props => {
   const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false);
   const [createNewPlaylistLoading, setCreateNewPlaylistLoading] =
     useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const {data} = useFetchMyPlaylists();
   const {onAudioPress} = useAudioController();
@@ -193,14 +190,7 @@ const HomeScreen: FC<Props> = props => {
           onSubmit={handleCreateNewPlaylist}
           loading={createNewPlaylistLoading}
         />
-        <Button title="Open" onPress={() => setShowModal(true)} />
       </ScrollView>
-      <AppModal
-        animation={true}
-        visible={showModal}
-        onRequestClose={() => setShowModal(false)}>
-        <View />
-      </AppModal>
     </AppView>
   );
 };

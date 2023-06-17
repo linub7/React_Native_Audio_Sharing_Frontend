@@ -1,4 +1,5 @@
 import {PermissionsAndroid, Platform} from 'react-native';
+import formatDuration from 'format-duration';
 
 export const getSource = (poster?: string) =>
   poster ? {uri: poster} : require('../assets/music.png');
@@ -10,3 +11,6 @@ export const getPermissionToReadImages = async () => {
       PermissionsAndroid.PERMISSIONS.CAMERA,
     ]);
 };
+
+export const formattedDuration = (duration = 0) =>
+  formatDuration(duration, {leading: true});
