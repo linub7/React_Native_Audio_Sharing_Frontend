@@ -1,6 +1,7 @@
 import {FC} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
+import colors from '@utils/colors';
 import AnimatedStroke from '@ui/animated-stroke';
 
 interface Props {
@@ -10,37 +11,27 @@ interface Props {
 const PlayAnimation: FC<Props> = ({visible}) => {
   if (!visible) return null;
   return (
-    <View style={styles.indicatorBox}>
+    <View style={styles.container}>
       <View style={styles.strokeContainer}>
-        <AnimatedStroke
-          lowestScale={0}
-          durationSequence={800}
-          durationTime={800}
-        />
-        <AnimatedStroke
-          lowestScale={0.2}
-          durationSequence={800}
-          durationTime={800}
-        />
-        <AnimatedStroke
-          lowestScale={0.4}
-          durationSequence={800}
-          durationTime={800}
-        />
+        <AnimatedStroke height={15} delay={0} />
+        <AnimatedStroke height={20} delay={100} />
+        <AnimatedStroke height={15} delay={150} />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  indicatorBox: {
+  container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.OVERLAY,
   },
   strokeContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    height: 20,
   },
 });
 

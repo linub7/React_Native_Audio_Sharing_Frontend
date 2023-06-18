@@ -1,20 +1,32 @@
-import colors from '@utils/colors';
 import {FC} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+
+import PlayAnimation from '@ui/play-animation';
+import colors from '@utils/colors';
 
 interface Props {
   onPress?(): void;
   uri?: string;
   title: string;
   name: string;
+  isPlaying?: boolean;
 }
 
-const ProfileAudioItem: FC<Props> = ({onPress, uri, title, name}) => {
+const ProfileAudioItem: FC<Props> = ({
+  onPress,
+  uri,
+  title,
+  name,
+  isPlaying = false,
+}) => {
   const getPoster = (uri?: string) =>
     uri ? {uri} : require('../../../assets/music_small.png');
   return (
     <Pressable style={styles.listItem} onPress={onPress}>
-      <Image source={getPoster(uri)} style={styles.poster} />
+      <View>
+        <Image source={getPoster(uri)} style={styles.poster} />
+        <PlayAnimation visible={isPlaying} />
+      </View>
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
           {title}
@@ -45,6 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.OVERLAY,
     marginBottom: 15,
     borderRadius: 5,
+    overflow: 'hidden',
   },
 });
 

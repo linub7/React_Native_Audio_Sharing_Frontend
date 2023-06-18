@@ -11,11 +11,13 @@ import AudioPlayerIcon from '@ui/audio-player-icon';
 import {mapRange} from '@utils/math';
 import AudioPlayer from '@components/home/audio-player';
 import PlayPauseButton from '@components/shared/play-pause-button';
+import CurrentAudioList from '@components/home/current-audio-list';
 
 interface Props {}
 
 const MiniAudioPlayer: FC<Props> = ({}) => {
   const [playerVisibility, setPlayerVisibility] = useState(false);
+  const [showCurrentList, setShowCurrentList] = useState(false);
 
   const {onGoingAudio} = useSelector(getPlayerState);
   const source = getSource(onGoingAudio?.poster);
@@ -23,6 +25,12 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
 
   const closePlayerModal = () => setPlayerVisibility(false);
   const showPlayerModal = () => setPlayerVisibility(true);
+
+  const handleOnCurrentListClose = () => setShowCurrentList(false);
+  const handleOnCurrentListOpen = () => {
+    closePlayerModal();
+    setShowCurrentList(true);
+  };
 
   return (
     <>
@@ -57,6 +65,12 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
       <AudioPlayer
         onRequestClose={closePlayerModal}
         visible={playerVisibility}
+        handleOnListOptionPress={handleOnCurrentListOpen}
+      />
+
+      <CurrentAudioList
+        visible={showCurrentList}
+        onRequestClose={handleOnCurrentListClose}
       />
     </>
   );
