@@ -1,9 +1,8 @@
-import {FC, useEffect, useState} from 'react';
+import {FC, useState} from 'react';
 import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-toast-message';
 import * as Yup from 'yup';
-import TrackPlayer from 'react-native-track-player';
 
 import LatestUploads from '@components/home/latest-uploads';
 import RecommendedAudios from '@components/home/recommended-audios';
@@ -126,13 +125,6 @@ const HomeScreen: FC<Props> = props => {
     }
     setShowPlaylistModal(false);
   };
-
-  useEffect(() => {
-    const setupPlayer = async () => {
-      await TrackPlayer.setupPlayer();
-    };
-    setupPlayer();
-  }, []);
 
   return (
     <AppView>
