@@ -1,8 +1,9 @@
-import {FC} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {FC, useState} from 'react';
+import {Image, StyleSheet, Text, View, Pressable} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useProgress} from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import AppModal from '@ui/app-modal';
 import {getSource} from '@utils/helper';
@@ -13,6 +14,7 @@ import AudioPlayerDuration from './duration';
 import useAudioController from 'src/hooks/useAudioController';
 import AudioPlayerControllers from './controllers';
 import PlaybackRateSelector from '@ui/playback-rate-selector';
+import AudioPlayerInfoContainer from './info-container';
 
 interface Props {
   visible: boolean;
@@ -20,6 +22,8 @@ interface Props {
 }
 
 const AudioPlayer: FC<Props> = ({visible, onRequestClose}) => {
+  const [isVisibleInfo, setIsVisibleInfo] = useState(false);
+
   const {onGoingAudio, playbackRate} = useSelector(getPlayerState);
   const dispatch = useDispatch();
 
@@ -44,6 +48,19 @@ const AudioPlayer: FC<Props> = ({visible, onRequestClose}) => {
       visible={visible}
       onRequestClose={onRequestClose}>
       <View style={styles.container}>
+        <Pressable
+          style={styles.infoBtn}
+          onPress={() => setIsVisibleInfo(true)}>
+          <AntDesign name="infocirlceo" size={24} color={colors.CONTRAST} />
+        </Pressable>
+        {isVisibleInfo && (
+          <AudioPlayerInfoContainer
+            onPress={() => setIsVisibleInfo(false)}
+            title={onGoingAudio?.title}
+            owner={onGoingAudio?.owner?.name}
+            about={onGoingAudio?.about}
+          />
+        )}
         <Image source={source} style={styles.poster} />
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{onGoingAudio?.title}</Text>
@@ -93,6 +110,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: colors.CONTRAST,
+  },
+  infoBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
 
