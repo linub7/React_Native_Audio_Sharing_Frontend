@@ -1,16 +1,27 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 
-import {useFetchHistoryByProfile} from 'src/hooks/query';
+import AudioListLoadingUI from '@ui/audio-list-loading';
+import EmptyRecords from '@ui/empty-records';
+import {useFetchHistoriesByProfile} from 'src/hooks/query';
+import HistoryItem from '@ui/history-item';
 
 interface Props {}
 
 const HistoryTab: FC<Props> = props => {
-  const {data} = useFetchHistoryByProfile();
+  const {data, isLoading} = useFetchHistoriesByProfile();
+
+  if (isLoading) return <AudioListLoadingUI />;
+
+  if (!data || !data[0]?.audios.length)
+    return <EmptyRecords title="No Histories Yet!" />;
+
   return (
-    <View style={styles.container}>
-      <Text style={{fontSize: 20, color: 'white'}}>Hist</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      {data?.map((item, i) => (
+        <HistoryItem key={item.date + i} item={item} />
+      ))}
+    </ScrollView>
   );
 };
 
