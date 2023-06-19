@@ -54,3 +54,20 @@ export const getHistoryByProfileHandler = async (
     return {err: errorMessage};
   }
 };
+
+export const clearHistoryHandler = async (
+  all: string | undefined,
+  token: string | undefined,
+) => {
+  try {
+    const {data} = await client.delete(`/history?all=${all}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};

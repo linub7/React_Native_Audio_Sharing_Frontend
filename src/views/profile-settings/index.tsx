@@ -1,10 +1,11 @@
 import {FC, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
 import deepEqual from 'deep-equal';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useIsFocused} from '@react-navigation/native';
+import {useQueryClient} from 'react-query';
 
 import AppHeader from '@components/profile/app-header';
 import colors from '@utils/colors';
@@ -23,6 +24,9 @@ import CustomLoader from '@ui/loader';
 import {getPermissionToReadImages} from '@utils/helper';
 import {generalError} from '@utils/constants';
 import {UserProfile} from 'src/@types/auth';
+import ProfileSettingsHistory from '@components/profile-settings/history';
+import {clearHistoryHandler} from 'src/api/history';
+import catchAsyncError from 'src/api/catchError';
 
 interface Props {}
 
@@ -34,11 +38,12 @@ interface ProfileInfo {
 const ProfileSettingsScreen: FC<Props> = props => {
   const [userInfo, setUserInfo] = useState<ProfileInfo>({name: ''});
   const [profile, setProfile] = useState<UserProfile>();
-
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+
+  const queryClient = useQueryClient();
 
   const isSame = deepEqual(userInfo, {
     name: profile?.name,
@@ -48,8 +53,6 @@ const ProfileSettingsScreen: FC<Props> = props => {
   useEffect(() => {
     if (isFocused) handleGetMyProfile();
   }, [isFocused]);
-
-  console.log(profile);
 
   const handleGetMyProfile = async () => {
     const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
@@ -136,6 +139,49 @@ const ProfileSettingsScreen: FC<Props> = props => {
     setLoading(false);
   };
 
+  const clearHistory = async () => {
+    try {
+      const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+      if (!token) return;
+      const {err, data} = await clearHistoryHandler('yes', token);
+      if (err) {
+        return Toast.show({
+          type: 'error',
+          text1: err,
+        });
+      }
+      queryClient.invalidateQueries({queryKey: ['my-histories']});
+      console.log(data);
+      Toast.show({type: 'success', text1: 'History cleared successfully.'});
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      Toast.show({type: 'error', text1: errorMessage});
+    }
+  };
+
+  const handleOnClearAllHistory = async () => {
+    Alert.alert(
+      'Are you Sure?',
+      'This action will clear out all of your history!',
+      [
+        {
+          text: 'Clear',
+          style: 'destructive',
+          onPress() {
+            clearHistory();
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+
   useEffect(() => {
     if (profile) setUserInfo({avatar: profile?.avatar, name: profile?.name});
   }, [profile]);
@@ -154,6 +200,9 @@ const ProfileSettingsScreen: FC<Props> = props => {
         onChangeText={handleChangeInput}
         onPress={handleImageSelect}
       />
+
+      <ProfileSettingsHistory onPress={handleOnClearAllHistory} />
+
       <ProfileSettingsLogout handleLogout={handleLogout} />
       {!isSame && (
         <View style={styles.marginTop}>
