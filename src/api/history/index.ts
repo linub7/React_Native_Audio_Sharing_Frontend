@@ -1,3 +1,4 @@
+import {StaleAudio} from 'src/@types/audio';
 import catchAsyncError from '../catchError';
 import client from '../client';
 
@@ -16,15 +17,13 @@ export const getMyHistoryHandler = async (token: string | undefined) => {
 };
 
 export const updateHistoryHandler = async (
-  audio: string,
-  progress: number,
-  date: any,
+  values: StaleAudio,
   token: string | undefined,
 ) => {
   try {
     const {data} = await client.post(
       `/history`,
-      {audio, progress, date},
+      {...values},
       {
         headers: {
           Authorization: `Bearer ${token}`,

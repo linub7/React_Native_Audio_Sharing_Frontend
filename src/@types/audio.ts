@@ -12,3 +12,9 @@ export interface AudioDataResponse {
     id: string;
   };
 }
+
+export interface StaleAudio {
+  audio: string;
+  progress: number;
+  date: Date;
+}
