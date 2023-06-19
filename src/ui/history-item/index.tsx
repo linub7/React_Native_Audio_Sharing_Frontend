@@ -3,24 +3,45 @@ import {FC} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import {HistoryByProfile} from 'src/@types/history';
+import {HistoryAudio, HistoryByProfile} from 'src/@types/history';
 
 interface Props {
+  onPress(item: HistoryAudio): void;
+  onLongPress(item: HistoryAudio): void;
+  onOuterPress(item: HistoryAudio): void;
   item: HistoryByProfile;
+  selectedHistories: string[];
 }
 
-const HistoryItem: FC<Props> = ({item}) => {
+const HistoryItem: FC<Props> = ({
+  onPress,
+  onLongPress,
+  item,
+  onOuterPress,
+  selectedHistories,
+}) => {
   return (
     <View>
       <Text style={styles.date}>{item.date}</Text>
       <View style={styles.listContainer}>
         {item?.audios?.map((el, j) => (
-          <View key={el.id + j} style={styles.history}>
+          <Pressable
+            onLongPress={() => onLongPress(el)}
+            onPress={() => onOuterPress(el)}
+            key={el.id + j}
+            style={[
+              styles.history,
+              {
+                backgroundColor: selectedHistories.includes(el.id)
+                  ? colors.INACTIVE_CONTRAST
+                  : colors.OVERLAY,
+              },
+            ]}>
             <Text style={styles.historyTitle}>{el.title}</Text>
-            <Pressable>
+            <Pressable onPress={() => onPress(el)}>
               <AntDesign name="close" color={colors.CONTRAST} />
             </Pressable>
-          </View>
+          </Pressable>
         ))}
       </View>
     </View>

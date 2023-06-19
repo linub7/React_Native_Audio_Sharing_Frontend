@@ -55,12 +55,29 @@ export const getHistoryByProfileHandler = async (
   }
 };
 
-export const clearHistoryHandler = async (
+export const clearAllHistoryHandler = async (
   all: string | undefined,
   token: string | undefined,
 ) => {
   try {
     const {data} = await client.delete(`/history?all=${all}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
+
+export const clearHistoriesHandler = async (
+  histories: any,
+  token: string | undefined,
+) => {
+  try {
+    const {data} = await client.delete(`/history?histories=${histories}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

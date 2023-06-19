@@ -25,7 +25,7 @@ import {getPermissionToReadImages} from '@utils/helper';
 import {generalError} from '@utils/constants';
 import {UserProfile} from 'src/@types/auth';
 import ProfileSettingsHistory from '@components/profile-settings/history';
-import {clearHistoryHandler} from 'src/api/history';
+import {clearAllHistoryHandler} from 'src/api/history';
 import catchAsyncError from 'src/api/catchError';
 
 interface Props {}
@@ -143,7 +143,7 @@ const ProfileSettingsScreen: FC<Props> = props => {
     try {
       const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
       if (!token) return;
-      const {err, data} = await clearHistoryHandler('yes', token);
+      const {err, data} = await clearAllHistoryHandler('yes', token);
       if (err) {
         return Toast.show({
           type: 'error',

@@ -16,10 +16,20 @@ export interface RecentlyPlayedDataResponse {
 
 export interface HistoryByProfile {
   date: string;
-  audios: {
+  audios: HistoryAudio[];
+}
+
+export interface HistoryAudio {
+  audioId: string;
+  date: string;
+  id: string;
+  title: string;
+}
+/**
+ * {
     audioId: string;
     date: string;
     id: string;
     title: string;
-  }[];
 }
+ */
