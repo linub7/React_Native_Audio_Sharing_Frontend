@@ -1,5 +1,11 @@
 import {FC, useEffect, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import {useMutation, useQueryClient} from 'react-query';
 import Toast from 'react-native-toast-message';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -20,8 +26,10 @@ const HistoryTab: FC<Props> = props => {
   const [historyIds, setHistoryIds] = useState<string[]>([]);
   const navigation = useNavigation();
 
-  const {data, isLoading} = useFetchHistoriesByProfile();
+  const {data, isLoading, isFetching} = useFetchHistoriesByProfile();
   const queryClient = useQueryClient();
+
+  const noData = !data?.length;
 
   const removeMutate = useMutation({
     mutationFn: histories => removeHistories(histories),
@@ -91,10 +99,10 @@ const HistoryTab: FC<Props> = props => {
     setHistoryIds(filterIds);
   };
 
-  if (isLoading) return <AudioListLoadingUI />;
+  const handleOnRefreshScreen = () =>
+    queryClient.invalidateQueries({queryKey: ['my-histories']});
 
-  if (!data || !data[0]?.audios.length)
-    return <EmptyRecords title="There is no history Yet!" />;
+  if (isLoading) return <AudioListLoadingUI />;
 
   return (
     <>
@@ -105,7 +113,16 @@ const HistoryTab: FC<Props> = props => {
           <Ionicons name="trash-outline" size={24} color={colors.CONTRAST} />
         </Pressable>
       )}
-      <ScrollView style={styles.container}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={handleOnRefreshScreen}
+            tintColor={colors.CONTRAST}
+          />
+        }
+        style={styles.container}>
+        {noData && <EmptyRecords title="There is no history Yet!" />}
         {data?.map((item, i) => (
           <HistoryItem
             key={item.date + i}

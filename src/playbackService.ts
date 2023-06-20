@@ -7,13 +7,11 @@ import {StaleAudio} from './@types/audio';
 const sendHistory = async (staleAudio: StaleAudio) => {
   const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
   if (!token) return;
-  const date = new Date(Date.now());
   const {err, data} = await updateHistoryHandler(staleAudio, token);
 
   if (err) {
     return console.log(err);
   }
-  console.log(data);
 };
 
 const playbackService = async () => {
