@@ -10,6 +10,7 @@ import FavoritesTab from '@components/profile/tabs/favorites';
 import colors from '@utils/colors';
 import ProfileContainer from '@components/profile/container';
 import {getAuthState} from 'src/store/auth';
+import AppView from '@components/app-view';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,19 +19,21 @@ interface Props {}
 const ProfileScreen: FC<Props> = props => {
   const {profile} = useSelector(getAuthState);
   return (
-    <View style={styles.container}>
-      <ProfileContainer profile={profile} />
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: styles.tabBarStyle,
-          tabBarLabelStyle: styles.tabBarLabelStyle,
-        }}>
-        <Tab.Screen name="uploads" component={UploadsTab} />
-        <Tab.Screen name="playlist" component={PlaylistTab} />
-        <Tab.Screen name="favorites" component={FavoritesTab} />
-        <Tab.Screen name="history" component={HistoryTab} />
-      </Tab.Navigator>
-    </View>
+    <AppView>
+      <View style={styles.container}>
+        <ProfileContainer profile={profile} />
+        <Tab.Navigator
+          screenOptions={{
+            tabBarStyle: styles.tabBarStyle,
+            tabBarLabelStyle: styles.tabBarLabelStyle,
+          }}>
+          <Tab.Screen name="uploads" component={UploadsTab} />
+          <Tab.Screen name="playlist" component={PlaylistTab} />
+          <Tab.Screen name="favorites" component={FavoritesTab} />
+          <Tab.Screen name="history" component={HistoryTab} />
+        </Tab.Navigator>
+      </View>
+    </AppView>
   );
 };
 
