@@ -7,6 +7,7 @@ export interface RecentlyPlayedDataResponse {
   };
   id: string;
   title: string;
+  about: string;
   file: string;
   poster?: string;
   category: categoriesTypes;
@@ -25,11 +26,3 @@ export interface HistoryAudio {
   id: string;
   title: string;
 }
-/**
- * {
-    audioId: string;
-    date: string;
-    id: string;
-    title: string;
-}
- */

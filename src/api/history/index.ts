@@ -2,7 +2,9 @@ import {StaleAudio} from 'src/@types/audio';
 import catchAsyncError from '../catchError';
 import client from '../client';
 
-export const getMyHistoryHandler = async (token: string | undefined) => {
+export const getMyRecentlyPlayedHistoryHandler = async (
+  token: string | undefined,
+) => {
   try {
     const {data} = await client.get(`/history/recently-played`, {
       headers: {

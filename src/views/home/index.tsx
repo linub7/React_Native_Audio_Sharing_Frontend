@@ -26,6 +26,7 @@ import {useFetchMyPlaylists} from 'src/hooks/query';
 import {Playlist} from 'src/@types/playlist';
 import useAudioController from 'src/hooks/useAudioController';
 import AppView from '@components/app-view';
+import RecentlyPlayed from '@components/home/recently-played';
 
 interface Props {}
 
@@ -131,6 +132,7 @@ const HomeScreen: FC<Props> = props => {
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}>
+        <RecentlyPlayed />
         <LatestUploads
           onAudioPress={onAudioPress}
           onAudioLongPress={handleOnLongPress}
@@ -139,6 +141,7 @@ const HomeScreen: FC<Props> = props => {
           onPress={onAudioPress}
           onLongPress={handleOnLongPress}
         />
+
         <OptionsModal
           visible={visible}
           onRequestClose={() => setVisible(false)}

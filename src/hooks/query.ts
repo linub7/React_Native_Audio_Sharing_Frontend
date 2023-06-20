@@ -8,7 +8,10 @@ import {Playlist} from 'src/@types/playlist';
 import {getLatestUploadsHandler} from 'src/api/audio';
 import catchAsyncError from 'src/api/catchError';
 import {getMyFavoritesHandler} from 'src/api/favorite';
-import {getHistoryByProfileHandler, getMyHistoryHandler} from 'src/api/history';
+import {
+  getHistoryByProfileHandler,
+  getMyRecentlyPlayedHistoryHandler,
+} from 'src/api/history';
 import {getMyPlaylistsHandler} from 'src/api/playlist';
 import {
   getRecommendedAudiosByProfileHandler,
@@ -105,18 +108,20 @@ export const useFetchUploadsByProfile = () => {
 };
 // ********************************* //
 
-// =====> getHistoryByProfile <===== //
-const handleGetHistoryByProfile = async (): Promise<
+// =====> getMyRecentlyPlayedHistory <===== //
+const handleGetMyRecentlyPlayedHistoryByProfile = async (): Promise<
   RecentlyPlayedDataResponse[]
 > => {
   const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
-  const {data} = await getMyHistoryHandler(token ? token : undefined);
+  const {data} = await getMyRecentlyPlayedHistoryHandler(
+    token ? token : undefined,
+  );
   return data?.recentlyPlayed;
 };
-export const useFetchHistoryByProfile = () => {
+export const useFetchGetMyRecentlyPlayedHistoryByProfile = () => {
   const dispatch = useDispatch();
-  return useQuery(['my-history'], {
-    queryFn: () => handleGetHistoryByProfile(),
+  return useQuery(['my-recently-played-history'], {
+    queryFn: () => handleGetMyRecentlyPlayedHistoryByProfile(),
     onError(err) {
       const errorMessage = catchAsyncError(err);
       dispatch(
