@@ -1,6 +1,6 @@
 import {FC, useEffect, useState} from 'react';
 import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
-import {useQueryClient} from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
 import Toast from 'react-native-toast-message';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
@@ -11,7 +11,7 @@ import {useFetchHistoriesByProfile} from 'src/hooks/query';
 import HistoryItem from '@ui/history-item';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import {clearHistoriesHandler} from 'src/api/history';
-import {HistoryAudio} from 'src/@types/history';
+import {HistoryAudio, HistoryByProfile} from 'src/@types/history';
 import colors from '@utils/colors';
 
 interface Props {}
@@ -22,6 +22,30 @@ const HistoryTab: FC<Props> = props => {
 
   const {data, isLoading} = useFetchHistoriesByProfile();
   const queryClient = useQueryClient();
+
+  const removeMutate = useMutation({
+    mutationFn: histories => removeHistories(histories),
+    onMutate: (histories: string[]) => {
+      queryClient.setQueryData<HistoryByProfile[]>(
+        ['my-histories'],
+        oldData => {
+          let newData: HistoryByProfile[] = [];
+          if (!oldData) return newData;
+
+          for (let data of oldData) {
+            const filteredData = data.audios.filter(
+              item => !histories.includes(item.id),
+            );
+            if (filteredData.length) {
+              newData.push({date: data.date, audios: filteredData});
+            }
+          }
+
+          return newData;
+        },
+      );
+    },
+  });
 
   useEffect(() => {
     const unSelectHistories = () => setHistoryIds([]);
@@ -49,12 +73,12 @@ const HistoryTab: FC<Props> = props => {
   };
 
   const handleSingleHistoryRemove = async (item: HistoryAudio) => {
-    await removeHistories([item.id]);
+    removeMutate.mutate([item.id]);
   };
 
   const handleDeleteMultipleHistories = async () => {
-    await removeHistories(historyIds);
     setHistoryIds([]);
+    removeMutate.mutate(historyIds);
   };
 
   const handleMultipleHistoriesRemove = async (item: HistoryAudio) => {
