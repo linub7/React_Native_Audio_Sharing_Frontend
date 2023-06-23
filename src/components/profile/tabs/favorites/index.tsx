@@ -1,15 +1,21 @@
 import {FC} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import ProfileAudioItem from '@ui/audio-item/profile';
 import EmptyRecords from '@ui/empty-records';
 import ProfileTopBarsSkeleton from '@ui/skeletons/profile-top-bars';
 import {useFetchFavoritesByProfile} from 'src/hooks/query';
+import useAudioController from 'src/hooks/useAudioController';
+import {getPlayerState} from 'src/store/player';
 
 interface Props {}
 
 const FavoritesTab: FC<Props> = props => {
   const {data, isLoading} = useFetchFavoritesByProfile();
+  const {onAudioPress} = useAudioController();
+  const {onGoingAudio} = useSelector(getPlayerState);
+
   if (isLoading) return <ProfileTopBarsSkeleton />;
 
   if (!data?.length) return <EmptyRecords title="There is no Favorites!" />;
@@ -22,7 +28,8 @@ const FavoritesTab: FC<Props> = props => {
           title={item.title}
           key={index}
           uri={item?.poster}
-          onPress={() => console.log('on press')}
+          onPress={() => onAudioPress(item, data)}
+          isPlaying={onGoingAudio?.id === item.id}
         />
       ))}
     </ScrollView>

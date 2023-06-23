@@ -1,11 +1,14 @@
 import {FC} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import GridView from '@ui/grid-view';
 import RecentlyPlayedItem from '@ui/recently-played-item';
 import colors from '@utils/colors';
 import {useFetchGetMyRecentlyPlayedHistoryByProfile} from 'src/hooks/query';
 import PulseAnimationContainer from '@ui/pulse-animation-container';
+import useAudioController from 'src/hooks/useAudioController';
+import {getPlayerState} from 'src/store/player';
 
 interface Props {}
 
@@ -13,6 +16,8 @@ const dummyData = new Array(4).fill('');
 
 const RecentlyPlayed: FC<Props> = props => {
   const {data = [], isLoading} = useFetchGetMyRecentlyPlayedHistoryByProfile();
+  const {onAudioPress} = useAudioController();
+  const {onGoingAudio} = useSelector(getPlayerState);
 
   if (isLoading)
     return (
@@ -24,6 +29,7 @@ const RecentlyPlayed: FC<Props> = props => {
         />
       </PulseAnimationContainer>
     );
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Recently Played</Text>
@@ -34,7 +40,8 @@ const RecentlyPlayed: FC<Props> = props => {
             <RecentlyPlayedItem
               title={item.title}
               poster={item.poster}
-              onPress={() => {}}
+              onPress={() => onAudioPress(item, data)}
+              playing={onGoingAudio?.id === item.id}
             />
           </View>
         )}

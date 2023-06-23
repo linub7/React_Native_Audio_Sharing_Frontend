@@ -3,18 +3,29 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 
 import {getSource} from '@utils/helper';
 import colors from '@utils/colors';
+import PlayAnimation from '@ui/play-animation';
 
 interface Props {
   title: string;
   poster?: string;
   onPress?(): void;
+  playing: boolean;
 }
 
-const RecentlyPlayedItem: FC<Props> = ({title, poster, onPress}) => {
+const RecentlyPlayedItem: FC<Props> = ({
+  title,
+  poster,
+  onPress,
+  playing = false,
+}) => {
   const source = getSource(poster);
   return (
-    <Pressable style={styles.container}>
-      <Image source={source} style={styles.poster} />
+    <Pressable onPress={onPress} style={styles.container}>
+      <View>
+        <Image source={source} style={styles.poster} />
+        <PlayAnimation visible={playing} />
+      </View>
+
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
           {title}

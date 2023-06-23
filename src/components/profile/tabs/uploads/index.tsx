@@ -1,15 +1,20 @@
 import {FC} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import ProfileAudioItem from '@ui/audio-item/profile';
 import {useFetchUploadsByProfile} from 'src/hooks/query';
 import ProfileTopBarsSkeleton from '@ui/skeletons/profile-top-bars';
 import EmptyRecords from '@ui/empty-records';
+import useAudioController from 'src/hooks/useAudioController';
+import {getPlayerState} from 'src/store/player';
 
 interface Props {}
 
 const UploadsTab: FC<Props> = props => {
   const {data, isLoading} = useFetchUploadsByProfile();
+  const {onAudioPress} = useAudioController();
+  const {onGoingAudio} = useSelector(getPlayerState);
 
   if (isLoading) return <ProfileTopBarsSkeleton />;
 
@@ -23,7 +28,8 @@ const UploadsTab: FC<Props> = props => {
           title={item.title}
           key={index}
           uri={item?.poster}
-          onPress={() => console.log('on press')}
+          onPress={() => onAudioPress(item, data)}
+          isPlaying={onGoingAudio?.id === item.id}
         />
       ))}
     </ScrollView>
