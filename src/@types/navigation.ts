@@ -17,6 +17,13 @@ export type ProfileNavigatorStackParamList = {
   };
 };
 
+export type HomeNavigatorStackParamList = {
+  home: undefined;
+  'public-profile': {
+    profileId: string;
+  };
+};
+
 export type PossibleNavigators = {
   'profile-settings': undefined;
   signin: undefined;

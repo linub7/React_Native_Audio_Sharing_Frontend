@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 import {useProgress} from 'react-native-track-player';
 import {useMutation, useQueryClient} from 'react-query';
 import Toast from 'react-native-toast-message';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import colors from '@utils/colors';
 import {MINI_PLAYER_HEIGHT, generalError} from '@utils/constants';
@@ -17,12 +18,16 @@ import CurrentAudioList from '@components/home/current-audio-list';
 import {useFetchIsFavoriteAudio} from 'src/hooks/query';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import {addToFavoriteHandler} from 'src/api/favorite';
+import {HomeNavigatorStackParamList} from 'src/@types/navigation';
 
 interface Props {}
 
 const MiniAudioPlayer: FC<Props> = ({}) => {
   const [playerVisibility, setPlayerVisibility] = useState(false);
   const [showCurrentList, setShowCurrentList] = useState(false);
+
+  const {navigate} =
+    useNavigation<NavigationProp<HomeNavigatorStackParamList>>();
 
   const {onGoingAudio} = useSelector(getPlayerState);
 
@@ -43,7 +48,6 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
     if (err) {
       return Toast.show({type: 'error', text1: err});
     }
-    console.log(data);
   };
 
   const favoriteMutation = useMutation({
@@ -63,6 +67,13 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
   const handleOnCurrentListOpen = () => {
     closePlayerModal();
     setShowCurrentList(true);
+  };
+
+  const handleOnProfileLinkPress = () => {
+    closePlayerModal();
+    navigate('public-profile', {
+      profileId: onGoingAudio?.owner.id || '',
+    });
   };
 
   return (
@@ -100,6 +111,7 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
         onRequestClose={closePlayerModal}
         visible={playerVisibility}
         handleOnListOptionPress={handleOnCurrentListOpen}
+        onProfileLinkPress={handleOnProfileLinkPress}
       />
 
       <CurrentAudioList

@@ -1,6 +1,7 @@
-import colors from '@utils/colors';
 import {FC} from 'react';
 import {Pressable, StyleSheet, Text} from 'react-native';
+
+import colors from '@utils/colors';
 
 interface Props {
   title: string;

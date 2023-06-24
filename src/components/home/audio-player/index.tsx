@@ -22,12 +22,14 @@ interface Props {
   visible: boolean;
   onRequestClose(): void;
   handleOnListOptionPress?(): void;
+  onProfileLinkPress?(): void;
 }
 
 const AudioPlayer: FC<Props> = ({
   visible,
   onRequestClose,
   handleOnListOptionPress,
+  onProfileLinkPress,
 }) => {
   const [isVisibleInfo, setIsVisibleInfo] = useState(false);
 
@@ -66,13 +68,18 @@ const AudioPlayer: FC<Props> = ({
             title={onGoingAudio?.title}
             owner={onGoingAudio?.owner?.name}
             about={onGoingAudio?.about}
+            onProfileLinkPress={onProfileLinkPress}
           />
         )}
         <Image source={source} style={styles.poster} />
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{onGoingAudio?.title}</Text>
 
-          <AppLink title={onGoingAudio?.owner.name || ''} onPress={() => {}} />
+          <AppLink
+            title={onGoingAudio?.owner.name || ''}
+            active={true}
+            onPress={onProfileLinkPress}
+          />
 
           <AudioPlayerDuration duration={duration} position={position} />
           <Slider

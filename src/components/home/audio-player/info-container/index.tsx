@@ -10,6 +10,7 @@ interface Props {
   owner?: string;
   title?: string;
   about?: string;
+  onProfileLinkPress?(): void;
 }
 
 const AudioPlayerInfoContainer: FC<Props> = ({
@@ -17,6 +18,7 @@ const AudioPlayerInfoContainer: FC<Props> = ({
   owner = '',
   title = '',
   about = '',
+  onProfileLinkPress,
 }) => {
   return (
     <View style={styles.container}>
@@ -27,7 +29,7 @@ const AudioPlayerInfoContainer: FC<Props> = ({
         <Text style={styles.title}>{title}</Text>
         <View style={styles.ownerInfo}>
           <Text style={styles.title}>Creator: </Text>
-          <AppLink title={owner} />
+          <AppLink title={owner} active={true} onPress={onProfileLinkPress} />
         </View>
         <Text style={styles.about}>{about}</Text>
       </ScrollView>
