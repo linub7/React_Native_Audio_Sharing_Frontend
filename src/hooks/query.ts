@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import {AudioDataResponse} from 'src/@types/audio';
 import {HistoryByProfile, RecentlyPlayedDataResponse} from 'src/@types/history';
-import {Playlist} from 'src/@types/playlist';
+import {Playlist, PublicProfilePlaylistAudios} from 'src/@types/playlist';
 import {getLatestUploadsHandler} from 'src/api/audio';
 import catchAsyncError from 'src/api/catchError';
 import {
@@ -20,6 +20,7 @@ import {
   getMyPlaylistsHandler,
 } from 'src/api/playlist';
 import {
+  getPublicPlaylistAudiosHandler,
   getPublicProfileHandler,
   getPublicProfilePlaylistHandler,
   getPublicProfileUploadsHandler,
@@ -294,6 +295,28 @@ export const useFetchPublicProfilePlaylist = (profileId: string) => {
       );
     },
     enabled: profileId ? true : false,
+  });
+};
+// ********************************* //
+
+// =====> getPublicPlaylistAudios <===== //
+const handleGetPublicPlaylistAudios = async (
+  playlistId: string,
+): Promise<PublicProfilePlaylistAudios> => {
+  const {data} = await getPublicPlaylistAudiosHandler('0', '10', playlistId);
+  return data?.list;
+};
+export const useFetchPublicPlaylistAudios = (playlistId: string) => {
+  const dispatch = useDispatch();
+  return useQuery(['public-playlist-audios', playlistId], {
+    queryFn: () => handleGetPublicPlaylistAudios(playlistId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      dispatch(
+        updateNotificationAction({type: 'error', message: errorMessage}),
+      );
+    },
+    enabled: playlistId ? true : false,
   });
 };
 // ********************************* //

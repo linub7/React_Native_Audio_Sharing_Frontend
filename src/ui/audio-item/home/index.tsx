@@ -22,7 +22,7 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-const AudioItem: FC<Props> = ({
+const HomeAudioItem: FC<Props> = ({
   onPress,
   onLongPress,
   uri,
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AudioItem;
+export default HomeAudioItem;

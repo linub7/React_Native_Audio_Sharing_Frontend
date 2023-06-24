@@ -1,7 +1,8 @@
-import AudioItem from '@ui/audio-item/home';
-import colors from '@utils/colors';
 import {FC} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text} from 'react-native';
+
+import HomeAudioItem from '@ui/audio-item/home';
+import colors from '@utils/colors';
 import {AudioDataResponse} from 'src/@types/audio';
 
 interface Props {
@@ -15,7 +16,7 @@ const AudioList: FC<Props> = ({label, data}) => {
       <Text style={styles.label}>{label}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {data?.map((item, index) => (
-          <AudioItem
+          <HomeAudioItem
             key={item.id}
             title={item.title}
             uri={item.poster}

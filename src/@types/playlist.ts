@@ -1,3 +1,5 @@
+import {AudioDataResponse} from './audio';
+
 export interface ICreateNewPlaylist {
   title: string;
   visibility: string;
@@ -15,4 +17,10 @@ export interface IUpdatePlaylist {
   title: string;
   item?: string;
   visibility?: string;
+}
+
+export interface PublicProfilePlaylistAudios {
+  id: string;
+  title: string;
+  audios: AudioDataResponse[];
 }

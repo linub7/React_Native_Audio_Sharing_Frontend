@@ -7,7 +7,7 @@ import colors from '@utils/colors';
 import {useFetchRecommendedAudios} from 'src/hooks/query';
 import RecommendedAudiosSkeleton from '@ui/skeletons/recommended-audios';
 import {AudioDataResponse} from 'src/@types/audio';
-import AudioItem from '@ui/audio-item/home';
+import HomeAudioItem from '@ui/audio-item/home';
 import {getPlayerState} from 'src/store/player';
 
 interface Props {
@@ -27,7 +27,7 @@ const RecommendedAudios: FC<Props> = ({onPress, onLongPress}) => {
         col={3}
         data={data || []}
         renderItem={item => (
-          <AudioItem
+          <HomeAudioItem
             title={item.title}
             uri={item.poster}
             onPress={() => onPress(item, data)}

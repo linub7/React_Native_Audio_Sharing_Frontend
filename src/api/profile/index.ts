@@ -97,3 +97,19 @@ export const getPublicProfilePlaylistHandler = async (
     return {err: errorMessage};
   }
 };
+
+export const getPublicPlaylistAudiosHandler = async (
+  page: string,
+  limit: string,
+  playlistId: string,
+) => {
+  try {
+    const {data} = await client.get(
+      `/profile/playlists-audios/${playlistId}?page=${page}&limit=${limit}`,
+    );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};

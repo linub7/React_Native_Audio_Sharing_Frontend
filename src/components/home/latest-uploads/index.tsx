@@ -2,7 +2,7 @@ import {FC} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import AudioItem from '@ui/audio-item/home';
+import HomeAudioItem from '@ui/audio-item/home';
 import LatestUploadsSkeleton from '@ui/skeletons/latest-uploads';
 import colors from '@utils/colors';
 import {AudioDataResponse} from 'src/@types/audio';
@@ -24,7 +24,7 @@ const LatestUploads: FC<Props> = ({onAudioPress, onAudioLongPress}) => {
       <Text style={styles.label}>Latest Uploads</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {data?.map((item, index) => (
-          <AudioItem
+          <HomeAudioItem
             key={item.id}
             title={item.title}
             uri={item.poster}
