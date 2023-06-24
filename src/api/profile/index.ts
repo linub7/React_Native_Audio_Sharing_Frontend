@@ -55,3 +55,45 @@ export const updateProfileHandler = async (
     return {err: errorMessage};
   }
 };
+
+export const getPublicProfileHandler = async (profileId: string) => {
+  try {
+    const {data} = await client.get(`/profile/infos/${profileId}`);
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
+
+export const getPublicProfileUploadsHandler = async (
+  page: string,
+  limit: string,
+  profileId: string,
+) => {
+  try {
+    const {data} = await client.get(
+      `/profile/uploads/${profileId}?page=${page}&limit=${limit}`,
+    );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
+
+export const getPublicProfilePlaylistHandler = async (
+  page: string,
+  limit: string,
+  profileId: string,
+) => {
+  try {
+    const {data} = await client.get(
+      `/profile/playlists/${profileId}?page=${page}&limit=${limit}`,
+    );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};

@@ -19,7 +19,17 @@ export type ProfileNavigatorStackParamList = {
 
 export type HomeNavigatorStackParamList = {
   home: undefined;
+  'profile-navigator': undefined;
   'public-profile': {
+    profileId: string;
+  };
+};
+
+export type PublicProfileTabParamList = {
+  'public-uploads': {
+    profileId: string;
+  };
+  'public-playlist': {
     profileId: string;
   };
 };

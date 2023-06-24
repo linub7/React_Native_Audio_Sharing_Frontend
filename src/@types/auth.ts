@@ -42,6 +42,13 @@ export interface UserProfile {
   followings: number;
 }
 
+export interface PublicProfile {
+  id: string;
+  name: string;
+  avatar?: string;
+  followers: number;
+}
+
 export interface AuthState {
   profile: UserProfile | null;
   loggedIn: boolean;

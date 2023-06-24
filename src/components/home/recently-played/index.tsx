@@ -30,6 +30,8 @@ const RecentlyPlayed: FC<Props> = props => {
       </PulseAnimationContainer>
     );
 
+  if (!data.length) return null;
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Recently Played</Text>

@@ -19,6 +19,7 @@ import {useFetchIsFavoriteAudio} from 'src/hooks/query';
 import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
 import {addToFavoriteHandler} from 'src/api/favorite';
 import {HomeNavigatorStackParamList} from 'src/@types/navigation';
+import {getAuthState} from 'src/store/auth';
 
 interface Props {}
 
@@ -30,6 +31,7 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
     useNavigation<NavigationProp<HomeNavigatorStackParamList>>();
 
   const {onGoingAudio} = useSelector(getPlayerState);
+  const {profile} = useSelector(getAuthState);
 
   const {data: isFavoriteAudio} = useFetchIsFavoriteAudio(
     onGoingAudio?.id || '',
@@ -71,9 +73,13 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
 
   const handleOnProfileLinkPress = () => {
     closePlayerModal();
-    navigate('public-profile', {
-      profileId: onGoingAudio?.owner.id || '',
-    });
+    if (profile?.id === onGoingAudio?.owner.id) {
+      navigate('profile-navigator');
+    } else {
+      navigate('public-profile', {
+        profileId: onGoingAudio?.owner.id || '',
+      });
+    }
   };
 
   return (

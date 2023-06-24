@@ -20,10 +20,14 @@ import {
   getMyPlaylistsHandler,
 } from 'src/api/playlist';
 import {
+  getPublicProfileHandler,
+  getPublicProfilePlaylistHandler,
+  getPublicProfileUploadsHandler,
   getRecommendedAudiosByProfileHandler,
   getUploadsByProfileHandler,
 } from 'src/api/profile';
 import {updateNotificationAction} from 'src/store/notification';
+import {PublicProfile} from 'src/@types/auth';
 
 // =====> getLatestUploads <===== //
 const handleGetLatestUploads = async (): Promise<AudioDataResponse[]> => {
@@ -224,6 +228,72 @@ export const useFetchIsFavoriteAudio = (audioId: string) => {
       );
     },
     enabled: audioId ? true : false,
+  });
+};
+// ********************************* //
+
+// =====> getPublicProfile <===== //
+const handleGetPublicProfile = async (
+  profileId: string,
+): Promise<PublicProfile> => {
+  const {data} = await getPublicProfileHandler(profileId);
+  return data?.profile;
+};
+export const useFetchPublicProfile = (profileId: string) => {
+  const dispatch = useDispatch();
+  return useQuery(['public-profile', profileId], {
+    queryFn: () => handleGetPublicProfile(profileId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      dispatch(
+        updateNotificationAction({type: 'error', message: errorMessage}),
+      );
+    },
+    enabled: profileId ? true : false,
+  });
+};
+// ********************************* //
+
+// =====> getPublicProfileUploads <===== //
+const handleGetPublicProfileUploads = async (
+  profileId: string,
+): Promise<AudioDataResponse[]> => {
+  const {data} = await getPublicProfileUploadsHandler('0', '10', profileId);
+  return data?.audios;
+};
+export const useFetchPublicProfileUploads = (profileId: string) => {
+  const dispatch = useDispatch();
+  return useQuery(['public-profile-uploads', profileId], {
+    queryFn: () => handleGetPublicProfileUploads(profileId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      dispatch(
+        updateNotificationAction({type: 'error', message: errorMessage}),
+      );
+    },
+    enabled: profileId ? true : false,
+  });
+};
+// ********************************* //
+
+// =====> getPublicProfilePlaylist <===== //
+const handleGetPublicProfilePlaylist = async (
+  profileId: string,
+): Promise<Playlist[]> => {
+  const {data} = await getPublicProfilePlaylistHandler('0', '10', profileId);
+  return data?.playlists;
+};
+export const useFetchPublicProfilePlaylist = (profileId: string) => {
+  const dispatch = useDispatch();
+  return useQuery(['public-profile-playlist', profileId], {
+    queryFn: () => handleGetPublicProfilePlaylist(profileId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      dispatch(
+        updateNotificationAction({type: 'error', message: errorMessage}),
+      );
+    },
+    enabled: profileId ? true : false,
   });
 };
 // ********************************* //
