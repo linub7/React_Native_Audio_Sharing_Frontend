@@ -35,7 +35,7 @@ const AudioItem: FC<Props> = ({
       onPress={onPress}
       onLongPress={onLongPress}
       style={[styles.container, containerStyle]}>
-      <View>
+      <View style={styles.imageContainer}>
         <Image source={getSource(uri)} style={styles.image} />
         <PlayAnimation visible={playing} />
       </View>
@@ -48,10 +48,15 @@ const AudioItem: FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {width: 100, marginRight: 15},
-  image: {
+  imageContainer: {
     width: '100%',
     aspectRatio: 1,
     borderRadius: 7,
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
   title: {
     color: colors.CONTRAST,

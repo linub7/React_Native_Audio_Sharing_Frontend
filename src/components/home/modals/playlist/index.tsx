@@ -2,17 +2,11 @@ import {FC} from 'react';
 import {ScrollView} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import Toast from 'react-native-toast-message';
-import * as Yup from 'yup';
 
 import BasicModalContainer from '@ui/basic-modal';
 import colors from '@utils/colors';
 import ListItem from './list-item';
 import {Playlist} from 'src/@types/playlist';
-import {oldPlaylistValidationSchema} from '@utils/validationSchema';
-import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
-import catchAsyncError from 'src/api/catchError';
-import {updatePlaylistHandler} from 'src/api/playlist';
 
 interface Props {
   visible: boolean;
