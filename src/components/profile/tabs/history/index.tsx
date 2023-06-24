@@ -1,11 +1,5 @@
 import {FC, useEffect, useState} from 'react';
-import {
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {Pressable, RefreshControl, ScrollView, StyleSheet} from 'react-native';
 import {useMutation, useQueryClient} from 'react-query';
 import Toast from 'react-native-toast-message';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -32,7 +26,7 @@ const HistoryTab: FC<Props> = props => {
   const noData = !data?.length;
 
   const removeMutate = useMutation({
-    mutationFn: histories => removeHistories(histories),
+    mutationFn: async histories => removeHistories(histories),
     onMutate: (histories: string[]) => {
       queryClient.setQueryData<HistoryByProfile[]>(
         ['my-histories'],

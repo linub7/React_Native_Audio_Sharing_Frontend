@@ -49,13 +49,12 @@ const useAudioController = () => {
     data: AudioDataResponse[],
   ) => {
     if (!isPlayerReady) {
-      console.log('playing for the first time');
       // playing audio for the first time
       await updateQueue(data);
+      dispatch(updateOnGoingAudioAction(item));
       const idx = data.findIndex(el => el.id === item.id);
       await TrackPlayer.skip(idx);
       await TrackPlayer.play();
-      dispatch(updateOnGoingAudioAction(item));
       return dispatch(updateOnGoingListAction(data));
     }
 
@@ -70,7 +69,6 @@ const useAudioController = () => {
     }
 
     if (onGoingAudio?.id !== item?.id) {
-      console.log('playing new audio');
       const fromSameList = deepEqual(onGoingList, data);
 
       await TrackPlayer.pause();

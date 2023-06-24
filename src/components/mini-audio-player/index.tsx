@@ -2,9 +2,11 @@ import {FC, useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useProgress} from 'react-native-track-player';
+import {useMutation, useQueryClient} from 'react-query';
+import Toast from 'react-native-toast-message';
 
 import colors from '@utils/colors';
-import {MINI_PLAYER_HEIGHT} from '@utils/constants';
+import {MINI_PLAYER_HEIGHT, generalError} from '@utils/constants';
 import {getPlayerState} from 'src/store/player';
 import {getSource} from '@utils/helper';
 import AudioPlayerIcon from '@ui/audio-player-icon';
@@ -12,6 +14,9 @@ import {mapRange} from '@utils/math';
 import AudioPlayer from '@components/home/audio-player';
 import PlayPauseButton from '@components/shared/play-pause-button';
 import CurrentAudioList from '@components/home/current-audio-list';
+import {useFetchIsFavoriteAudio} from 'src/hooks/query';
+import {Keys, getFromAsyncStorage} from '@utils/asyncStorage';
+import {addToFavoriteHandler} from 'src/api/favorite';
 
 interface Props {}
 
@@ -20,8 +25,36 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
   const [showCurrentList, setShowCurrentList] = useState(false);
 
   const {onGoingAudio} = useSelector(getPlayerState);
-  const source = getSource(onGoingAudio?.poster);
+
+  const {data: isFavoriteAudio} = useFetchIsFavoriteAudio(
+    onGoingAudio?.id || '',
+  );
   const progress = useProgress();
+
+  const source = getSource(onGoingAudio?.poster);
+
+  const queryClient = useQueryClient();
+
+  const toggleIsFavorite = async (id: string) => {
+    if (!id) return Toast.show({type: 'error', text1: generalError});
+    const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+    if (!token) return Toast.show({type: 'error', text1: generalError});
+    const {err, data} = await addToFavoriteHandler(id, token);
+    if (err) {
+      return Toast.show({type: 'error', text1: err});
+    }
+    console.log(data);
+  };
+
+  const favoriteMutation = useMutation({
+    mutationFn: async id => toggleIsFavorite(id),
+    onMutate: (id: string) => {
+      queryClient.setQueryData<boolean>(
+        ['is-favorite-audio', onGoingAudio?.id],
+        oldData => !oldData,
+      );
+    },
+  });
 
   const closePlayerModal = () => setPlayerVisibility(false);
   const showPlayerModal = () => setPlayerVisibility(true);
@@ -54,10 +87,11 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
           <Text style={styles.name}>{onGoingAudio?.owner.name}</Text>
         </Pressable>
         <AudioPlayerIcon
-          name="hearto"
+          name={isFavoriteAudio ? 'heart' : 'hearto'}
           size={24}
           color={colors.CONTRAST}
           containerStyle={styles.heartIcon}
+          onPress={() => favoriteMutation.mutate(onGoingAudio?.id || '')}
         />
         <PlayPauseButton color={colors.CONTRAST} />
       </View>

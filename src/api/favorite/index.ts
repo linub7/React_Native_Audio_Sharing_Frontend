@@ -31,3 +31,23 @@ export const getMyFavoritesHandler = async (token: string | undefined) => {
     return {err: errorMessage};
   }
 };
+
+export const getIsFavoriteAudioHandler = async (
+  audioId: string,
+  token: string | undefined,
+) => {
+  try {
+    const {data} = await client.get(
+      `/favorites/is-favorite?audioId=${audioId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
