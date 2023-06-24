@@ -56,7 +56,7 @@ const MiniAudioPlayer: FC<Props> = ({}) => {
     mutationFn: async id => toggleIsFavorite(id),
     onMutate: (id: string) => {
       queryClient.setQueryData<boolean>(
-        ['is-favorite-audio', onGoingAudio?.id],
+        ['is-favorite-audio', id],
         oldData => !oldData,
       );
     },

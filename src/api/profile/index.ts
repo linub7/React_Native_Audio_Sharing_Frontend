@@ -113,3 +113,41 @@ export const getPublicPlaylistAudiosHandler = async (
     return {err: errorMessage};
   }
 };
+
+export const getIsFollowingHandler = async (
+  profileId: string,
+  token: string | undefined,
+) => {
+  try {
+    const {data} = await client.get(`/profile/is-following/${profileId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};
+
+export const updateFollowerStatusHandler = async (
+  profileId: string,
+  token: string | undefined,
+) => {
+  try {
+    const {data} = await client.post(
+      `/profile/update-follower/${profileId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return {data};
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return {err: errorMessage};
+  }
+};

@@ -20,6 +20,7 @@ import {
   getMyPlaylistsHandler,
 } from 'src/api/playlist';
 import {
+  getIsFollowingHandler,
   getPublicPlaylistAudiosHandler,
   getPublicProfileHandler,
   getPublicProfilePlaylistHandler,
@@ -317,6 +318,30 @@ export const useFetchPublicPlaylistAudios = (playlistId: string) => {
       );
     },
     enabled: playlistId ? true : false,
+  });
+};
+// ********************************* //
+
+// =====> getIsFollowing <===== //
+const handleGetIsFollowing = async (profileId: string): Promise<boolean> => {
+  const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
+  const {data} = await getIsFollowingHandler(
+    profileId,
+    token ? token : undefined,
+  );
+  return data?.status;
+};
+export const useFetchIsFollowing = (profileId: string) => {
+  const dispatch = useDispatch();
+  return useQuery(['is-following', profileId], {
+    queryFn: () => handleGetIsFollowing(profileId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      dispatch(
+        updateNotificationAction({type: 'error', message: errorMessage}),
+      );
+    },
+    enabled: profileId ? true : false,
   });
 };
 // ********************************* //
