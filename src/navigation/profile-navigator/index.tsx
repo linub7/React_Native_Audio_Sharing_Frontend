@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ProfileScreen from '@views/profile';
 import ProfileSettingsScreen from '@views/profile-settings';
 import VerifyEmail from '@views/auth/verify-email';
+import UpdateAudioScreen from '@views/update-audio';
 import {ProfileNavigatorStackParamList} from 'src/@types/navigation';
 
 const Stack = createNativeStackNavigator<ProfileNavigatorStackParamList>();
@@ -16,6 +17,7 @@ const ProfileNavigator: FC<Props> = props => {
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="profile-settings" component={ProfileSettingsScreen} />
       <Stack.Screen name="verify-email" component={VerifyEmail} />
+      <Stack.Screen name="edit-audio" component={UpdateAudioScreen} />
     </Stack.Navigator>
   );
 };

@@ -6,6 +6,7 @@ import colors from '@utils/colors';
 
 interface Props {
   onPress?(): void;
+  onLongPress?(): void;
   uri?: string;
   title: string;
   name: string;
@@ -14,6 +15,7 @@ interface Props {
 
 const ProfileAudioItem: FC<Props> = ({
   onPress,
+  onLongPress,
   uri,
   title,
   name,
@@ -22,7 +24,10 @@ const ProfileAudioItem: FC<Props> = ({
   const getPoster = (uri?: string) =>
     uri ? {uri} : require('../../../assets/music_small.png');
   return (
-    <Pressable style={styles.listItem} onPress={onPress}>
+    <Pressable
+      style={styles.listItem}
+      onPress={onPress}
+      onLongPress={onLongPress}>
       <View>
         <Image source={getPoster(uri)} style={styles.poster} />
         <PlayAnimation visible={isPlaying} />

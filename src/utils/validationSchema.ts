@@ -38,24 +38,32 @@ export const lostPasswordValidationSchema = Yup.object({
     .required('Email is required!'),
 });
 
-export const audioInfoValidationSchema = Yup.object({
+export const commonAudioInfoValidationSchema = {
   title: Yup.string().required('Title is required'),
   about: Yup.string().required('About is required'),
   category: Yup.string()
     .oneOf(categories, 'Invalid Category')
     .required('Category is required'),
-  file: Yup.object({
-    uri: Yup.string().required('Audio file is required!'),
-    name: Yup.string().required('Audio file is required!'),
-    type: Yup.string().required('Audio file is required!'),
-    size: Yup.number().required('Audio file is required!'),
-  }),
   poster: Yup.object({
     uri: Yup.string(),
     name: Yup.string(),
     type: Yup.string(),
     size: Yup.number(),
   }),
+};
+
+export const newAudioInfoValidationSchema = Yup.object({
+  ...commonAudioInfoValidationSchema,
+  file: Yup.object({
+    uri: Yup.string().required('Audio file is required!'),
+    name: Yup.string().required('Audio file is required!'),
+    type: Yup.string().required('Audio file is required!'),
+    size: Yup.number().required('Audio file is required!'),
+  }),
+});
+
+export const oldAudioInfoValidationSchema = Yup.object({
+  ...commonAudioInfoValidationSchema,
 });
 
 export const newPlaylistValidationSchema = Yup.object().shape({

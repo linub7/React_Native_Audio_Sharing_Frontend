@@ -1,4 +1,5 @@
 import {ISignupUserResponse} from 'src/@types/auth';
+import {AudioDataResponse} from './audio';
 
 export type AuthStackParamList = {
   signin: undefined;
@@ -14,6 +15,9 @@ export type ProfileNavigatorStackParamList = {
   'profile-settings': undefined;
   'verify-email': {
     userInfo: ISignupUserResponse;
+  };
+  'edit-audio': {
+    audio: AudioDataResponse;
   };
 };
 
